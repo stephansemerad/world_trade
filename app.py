@@ -63,7 +63,6 @@ def load_trades() -> pd.DataFrame:
 
 trade_df = load_trades()
 trade_df.columns = trade_df.columns.str.lower()
-trade_data = trade_df.to_dict("records")
 
 if trade_df.empty:
     st.warning(f"No trade data.")
@@ -73,14 +72,51 @@ if trade_df.empty:
 # ── load & filter data ────────────────────────────────────────────────── #
 
 
-st.title("🔵 Cytoscape.js in Streamlit")
+st.title("🌐 World Trade Map")
 st.write("A simple interactive graph example.")
 
-col1, col2, col3 = st.columns([1, 2, 1])  # Adjust ratios as needed
+col1, col2, col3 = st.columns([1, 2, 2])  # Adjust ratios as needed
 
 with col1:
     options = ["cose", "breadthfirst", "circle", "grid", "random"]
     layout = st.selectbox("Choose:", options)
+
+with col2:
+    exporting_countries_df = trade_df[["reporter", "reporter_name"]]
+    exporting_countries = dict(
+        zip(exporting_countries_df["reporter_name"], exporting_countries_df["reporter"])
+    )
+    exporting_country = st.selectbox(
+        "Exporting Country",
+        options=list(exporting_countries.keys()),
+    )
+
+with col3:
+    importing_countries_df = trade_df[["partner", "partner_name"]]
+    exporting_countries = dict(
+        zip(importing_countries_df["partner_name"], importing_countries_df["partner"])
+    )
+    exporting_country = st.selectbox(
+        "Exporting Country",
+        options=list(exporting_countries.keys()),
+    )
+
+# Get min and max and cast to float (Streamlit often needs Python scalars)
+min_val = float(trade_df["value"].min())
+max_val = float(trade_df["value"].max())
+
+# Create slider with those bounds
+slider_range = st.slider(
+    "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
+)
+
+min_slider, max_slider = slider_range
+trade_df = trade_df[
+    (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
+]
+
+
+trade_data = trade_df.to_dict("records")
 
 
 nodes = []
