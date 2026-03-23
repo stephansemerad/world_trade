@@ -1,9 +1,6 @@
-import math
 import pandas as pd
-import polars as pl
 import streamlit as st
 from sqlalchemy import create_engine, text
-import pycountry
 from st_cytoscape import cytoscape
 
 
@@ -17,9 +14,8 @@ st.set_page_config(
 
 DB_PATH = "sqlite:///trade.db"
 
+
 # ── data loading ──────────────────────────────────────────────────────── #
-
-
 @st.cache_resource
 def get_engine():
     return create_engine(DB_PATH)
@@ -86,7 +82,7 @@ with col2:
     exporting_countries = dict(
         zip(exporting_countries_df["reporter_name"], exporting_countries_df["reporter"])
     )
-    exporting_country = st.selectbox(
+    exporting_country = st.multiselect(
         "Exporting Country",
         options=list(exporting_countries.keys()),
     )
@@ -96,24 +92,35 @@ with col3:
     exporting_countries = dict(
         zip(importing_countries_df["partner_name"], importing_countries_df["partner"])
     )
-    exporting_country = st.selectbox(
-        "Exporting Country",
+    importing_country = st.multiselect(
+        "Importing Country",
         options=list(exporting_countries.keys()),
     )
 
-# Get min and max and cast to float (Streamlit often needs Python scalars)
 min_val = float(trade_df["value"].min())
 max_val = float(trade_df["value"].max())
 
-# Create slider with those bounds
 slider_range = st.slider(
     "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
 )
 
+
+# Filters
+# -----------------------------------------------------------------------
 min_slider, max_slider = slider_range
 trade_df = trade_df[
     (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
 ]
+
+if exporting_country:
+    trade_df = trade_df[(trade_df["reporter"] == exporting_country)]
+
+if importing_country:
+    trade_df = trade_df[(trade_df["partner"] == importing_country)]
+
+
+# Cytoscape
+# -----------------------------------------------------------------------
 
 
 trade_data = trade_df.to_dict("records")
