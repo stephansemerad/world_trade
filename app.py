@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy import create_engine, text
 from st_cytoscape import cytoscape
+import altair as alt
 
 
 # ── page config ───────────────────────────────────────────────────────── #
@@ -178,8 +179,7 @@ for y in trade_data:
     if edge_width > 1000:
         edge_width = 10
 
-    edges.append(
-        {
+    row =         {
             "data": {
                 "id": f"{y['reporter']}-{y['partner']}",
                 "source": y["reporter"],
@@ -187,7 +187,9 @@ for y in trade_data:
                 "width": 1,  # Add width to edge data
             }
         }
-    )
+
+    if row not in edges:
+        edges.append(row)
 
 elements = nodes + edges
 
@@ -230,7 +232,7 @@ stylesheet = [
 # Render the graph — layout IS supported here
 # breadthfirst, circle, grid, cose, random
 
-col1, col2 = st.columns([1, 1])
+col1, col2 = st.columns([2, 1])
 
 with col1:
     selected = cytoscape(
@@ -240,20 +242,38 @@ with col1:
             "name": layout,
             "nodeRepulsion": 400000,  # higher = nodes push apart more
         },
-        height="500px",
         key="cytoscape123",
     )
 
 
 with col2:
-    trade_summary = pd.DataFrame({
-    "productcode": ["01-05_Animal", "06-15_Vegetable", "16-24_Food", "25-27_Minerals", 
-                   "28-38_Chemicals", "39-40_Plastic", "84-85_Machinery", "87_Vehicles"],
-    "trade_value": [45230000, 87560000, 124780000, 298450000, 
-                   567890000, 234560000, 1892345000, 1456789000]
-    })
+    graph_data = trade_df
 
-    st.bar_chart(trade_summary.set_index("productcode"))
+    graph_data['trade'] = (
+        trade_df['reporter'] + ' > ' +  trade_df['partner_name']
+    )
+    graph_data = graph_data[['trade', 'value']]
+    graph_data = graph_data.sort_values('value', ascending=False).head(20)  # Top 20 for readability
+    graph_data['value_mil'] = graph_data['value'] / 1_000_000
+
+    chart = (
+        alt.Chart(graph_data)
+        .mark_bar(color='steelblue')
+        .encode(
+            x=alt.X('value_mil:Q', 
+                    title='Trade Value (Mil USD)',
+                    axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
+            y=alt.Y('trade:N', sort=None, title='Trade Flow'),
+            tooltip=[alt.Tooltip('trade:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
+        )
+        .properties(width=600, height=400, title='Top Trade Flows (in Millions)')
+    )
+
+    st.altair_chart(chart, use_container_width=True)
+
+
+
+
 
 
 if selected["nodes"]:
