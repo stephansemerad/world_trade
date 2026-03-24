@@ -240,9 +240,9 @@ stylesheet = [
     {
         "selector": ":selected",
         "style": {
-            "background-color": "#E94F37",
-            "line-color": "#E94F37",
-            "target-arrow-color": "#E94F37",
+            "background-color": "#4A90E2",
+            "line-color": "#2C598C",
+            "target-arrow-color": "#135AAC",
         },
     },
 ]
@@ -263,10 +263,10 @@ with col1:
     selected = cytoscape(
         elements,
         stylesheet,
-    height="500px",  # 👈 STRING with "px" - not int!
+    height="500px",
         layout={
             "name": layout,
-            "nodeRepulsion": 400000,  # higher = nodes push apart more
+            "nodeRepulsion": 500000,
         },
         key="cytoscape",
 
