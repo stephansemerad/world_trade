@@ -38,7 +38,7 @@ def load_trades() -> pd.DataFrame:
     engine = get_engine()
     query = text(
         """
-        SELECT
+        SELECT DISTINCT
         REPORTER, 
         r_country.name as REPORTER_name, 
         PARTNER, 
@@ -47,15 +47,8 @@ def load_trades() -> pd.DataFrame:
         value, period, PRODUCTCODE FROM trade
         left join countries as r_country on r_country.id == REPORTER
         left join countries as p_country on p_country.id == PARTNER
-
-                where 1 = 1
-
-                 and REPORTER not in 
-                 ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS')
-                 and PARTNER not in 
-                 ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS')
-
-                 order by value desc
+        where 1 = 1
+        order by value desc
 
         """
     )
@@ -68,7 +61,10 @@ trade_df = load_trades()
 trade_df = trade_df.drop_duplicates()
 trade_df.columns = trade_df.columns.str.lower()
 
-trade_df['weight'] = trade_df.groupby('reporter')['value'].transform(
+trade_df = trade_df[~trade_df['partner'].isin(['SAS', 'ECS', 'LCN', 'NAC', 'OAS', 'FRE', 'WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS'])]
+
+
+trade_df['weight'] = trade_df.groupby(['reporter', 'period'])['value'].transform(
     lambda x: (x / x.sum()).round(4) * 100
 )
 
@@ -76,6 +72,8 @@ trade_df['weight'] = trade_df.groupby('reporter')['value'].transform(
 timeseries_trade_df = load_trades()
 timeseries_trade_df = timeseries_trade_df.drop_duplicates()
 timeseries_trade_df.columns = timeseries_trade_df.columns.str.lower()
+
+trade_df = trade_df[trade_df['weight'] > 0]
 
 if trade_df.empty:
     st.warning(f"No trade data.")
@@ -124,16 +122,34 @@ with col4:
         timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["partner_name"].isin(importing_country)]
 
 
-min_val = float(0)
-max_val = float(trade_df["value"].max())
+col1, col2 = st.columns([1, 1])
 
-slider_range = st.slider(
-    "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
-)
-min_slider, max_slider = slider_range
-trade_df = trade_df[
-    (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
-]
+with col1:
+    min_val = float(0)
+    max_val = float(trade_df["value"].max())
+
+    slider_range = st.slider(
+        "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
+    )
+    min_slider, max_slider = slider_range
+    trade_df = trade_df[
+        (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
+    ]
+
+
+with col2:
+
+    min_val = float(0)
+    max_val = float(trade_df["weight"].max())
+
+    slider_range = st.slider(
+        "Weight range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
+    )
+    min_slider, max_slider = slider_range
+    trade_df = trade_df[
+        (trade_df["weight"] >= min_slider) & (trade_df["weight"] <= max_slider)
+    ]
+
 
 # Cytoscape
 # ----------------------------------------------------------------------
@@ -187,7 +203,7 @@ for y in trade_data:
                 "id": f"{y['reporter']}-{y['partner']}",
                 "source": y["reporter"],
                 "target": y["partner"],
-                "width": y["weight"],  # Add width to edge data
+                "width": y["weight"] / 10,  # Add width to edge data
             }
         }
 
@@ -286,9 +302,17 @@ with col1:
     timeseries_trade_df['trade'] = (
         timeseries_trade_df['reporter'] + ' > ' +  timeseries_trade_df['partner_name']
     )
-    timeseries_trade_df = timeseries_trade_df[['trade', 'value', 'period']]
+    timeseries_trade_df = timeseries_trade_df[['trade', 'value', 'period', 'reporter', 'partner']]
     timeseries_trade_df = timeseries_trade_df.dropna()
-    
+
+
+    countries_to_filter = trade_df['partner'].to_list()
+    timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["partner"].isin(countries_to_filter)]
+
+    countries_to_filter = trade_df['reporter'].to_list()
+    timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["reporter"].isin(countries_to_filter)]
+
+
     chart = (alt.Chart(timeseries_trade_df)
         .mark_line(strokeWidth=3)
         .encode(
@@ -337,9 +361,12 @@ with col2:
     st.altair_chart(chart, width='stretch')
 
 
+st.dataframe(trade_df[['partner', 'partner_name']].drop_duplicates())
 
-
-
+st.divider()
 
 st.dataframe(trade_df, width="stretch")
 st.dataframe(timeseries_trade_df, width="stretch")
+
+
+
