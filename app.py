@@ -3,6 +3,7 @@ import streamlit as st
 from sqlalchemy import create_engine, text
 from st_cytoscape import cytoscape
 import altair as alt
+import numpy as np
 
 
 # ── page config ───────────────────────────────────────────────────────── #
@@ -14,6 +15,11 @@ st.set_page_config(
 )
 
 DB_PATH = "sqlite:///trade.db"
+
+# Dropdown and Selectors
+# -----------------------------------------------------------------------
+st.title("🌐 World Trade Map")
+st.write("A simple interactive graph example.")
 
 
 # ── data loading ──────────────────────────────────────────────────────── #
@@ -57,17 +63,13 @@ def load_trades() -> pd.DataFrame:
 
 
 trade_df = load_trades()
+trade_df = trade_df.drop_duplicates()
 trade_df.columns = trade_df.columns.str.lower()
 
 if trade_df.empty:
     st.warning(f"No trade data.")
     st.stop()
 
-
-# Dropdown and Selectors
-# -----------------------------------------------------------------------
-st.title("🌐 World Trade Map")
-st.write("A simple interactive graph example.")
 
 col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 2, 2])
 
@@ -76,9 +78,12 @@ with col1:
     layout = st.selectbox("Choose:", options)
 
 with col2:
-    year_options = trade_df["period"].unique().tolist()
-    year_options.sort()
+    year_options = trade_df["period"].unique()
+    year_options = sorted(year_options, reverse=True)
     year_selection = st.selectbox("Select Year:", year_options)
+    if year_selection:
+        trade_df = trade_df[trade_df["period"] == year_selection ]
+
 
 with col3:
     product_options = trade_df["productcode"].unique().tolist()
@@ -93,6 +98,9 @@ with col4:
         "Exporting Country",
         options=list(exporting_countries.keys()),
     )
+    if exporting_country:
+        trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
+
 
 with col5:
     importing_countries_df = trade_df[["partner", "partner_name"]]
@@ -103,38 +111,23 @@ with col5:
         "Importing Country",
         options=list(importing_countries.keys()),
     )
+    if importing_country:
+        trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
 
-min_val = float(trade_df["value"].min())
+
+min_val = float(0)
 max_val = float(trade_df["value"].max())
 
 slider_range = st.slider(
     "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
 )
-
-
-# Filters
-# -----------------------------------------------------------------------
 min_slider, max_slider = slider_range
 trade_df = trade_df[
     (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
 ]
 
-if year_selection:
-    trade_df = trade_df[trade_df["period"] == year_selection ]
-
-
-if exporting_country:
-    trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
-
-
-if importing_country:
-    trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
-
-
-
 # Cytoscape
-# -----------------------------------------------------------------------
-
+# ----------------------------------------------------------------------
 
 trade_data = trade_df.to_dict("records")
 
@@ -266,14 +259,51 @@ with col2:
             y=alt.Y('trade:N', sort=None, title='Trade Flow'),
             tooltip=[alt.Tooltip('trade:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
         )
-        .properties(width=600, height=400, title='Top Trade Flows (in Millions)')
+        .properties(height=500, title='Top Trade Flows (in Millions)')
     )
 
     st.altair_chart(chart, use_container_width=True)
 
 
 
+dates = pd.date_range('2020-01-01', periods=100, freq='ME')  # Fixed 'M' -> 'ME'
+data = pd.DataFrame({
+    'date': np.tile(dates, 4),
+    'value': np.concatenate([
+        np.random.normal(100, 10, 100),   # GCC
+        np.random.normal(150, 15, 100),   # Iran (IRN)
+        np.random.normal(200, 20, 100),   # USA
+        np.random.normal(80, 8, 100)      # China
+    ]),
+    'country': np.repeat(['GCC', 'IRN', 'USA', 'CHN'], 100)
+})
 
+graph_data = trade_df
+
+graph_data['trade'] = (
+    trade_df['reporter'] + ' > ' +  trade_df['partner_name']
+)
+graph_data = graph_data[['trade', 'value', 'period']]
+
+
+# Multiline chart
+chart = (alt.Chart(data)
+    .mark_line(strokeWidth=3)
+    .encode(
+        x=alt.X('period:T', title='Period'),
+        y=alt.Y('value:Q', title='Trade Value'),
+        color=alt.Color('trade:N', title='Trade Flow'),
+        strokeDash=alt.StrokeDash('trade:N')
+    )
+    .properties(
+        title='Trade Flow over time',
+        width=800,
+        height=500
+    )
+    .interactive()
+)
+
+chart
 
 
 if selected["nodes"]:
