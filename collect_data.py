@@ -40,15 +40,15 @@ with engine.connect() as conn:
             if df.is_empty():
                 continue
             else:
-                # country_x_name = countries_df.filter(pl.col("id") == w.exporting)[
-                #     "name"
-                # ][0]
-                # country_y_name = countries_df.filter(pl.col("id") == w.importing)[
-                #     "name"
-                # ][0]
+                country_x_name = countries_df.filter(pl.col("id") == w.exporting)[
+                    "name"
+                ][0]
+                country_y_name = countries_df.filter(pl.col("id") == w.importing)[
+                    "name"
+                ][0]
 
-                # print(country_x_name, country_y_name)
-                # print(df)
-                
+                print(country_x_name, country_y_name)
+                print(df)
+
                 save(df, "trade", engine, if_exists="append")
                 time.sleep(2)

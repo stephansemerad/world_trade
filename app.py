@@ -64,27 +64,28 @@ def load_trades() -> pd.DataFrame:
 
 
 trade_df = load_trades()
-timeseries_trade_df = trade_df
 
 trade_df = trade_df.drop_duplicates()
 trade_df.columns = trade_df.columns.str.lower()
 
+trade_df['weight'] = trade_df.groupby('reporter')['value'].transform(
+    lambda x: (x / x.sum()).round(4) * 100
+)
+
+
+timeseries_trade_df = load_trades()
 timeseries_trade_df = timeseries_trade_df.drop_duplicates()
 timeseries_trade_df.columns = timeseries_trade_df.columns.str.lower()
-
 
 if trade_df.empty:
     st.warning(f"No trade data.")
     st.stop()
 
 
-col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 2, 2])
+col1, col2, col3, col4 = st.columns([1, 1, 2, 2])
+
 
 with col1:
-    options = ["cose", "breadthfirst", "circle", "grid", "random"]
-    layout = st.selectbox("Choose:", options)
-
-with col2:
     year_options = trade_df["period"].unique()
     year_options = sorted(year_options, reverse=True)
     year_selection = st.selectbox("Select Year:", year_options)
@@ -92,11 +93,11 @@ with col2:
         trade_df = trade_df[trade_df["period"] == year_selection ]
 
 
-with col3:
+with col2:
     product_options = trade_df["productcode"].unique().tolist()
     product_selection = st.selectbox("Select Product:", product_options)
 
-with col4:
+with col3:
     exporting_countries_df = trade_df[["reporter", "reporter_name"]]
     exporting_countries = dict(
         zip(exporting_countries_df["reporter_name"], exporting_countries_df["reporter"])
@@ -107,9 +108,9 @@ with col4:
     )
     if exporting_country:
         trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
-        timeseries_trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
+        timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["reporter_name"].isin(exporting_country)]
 
-with col5:
+with col4:
     importing_countries_df = trade_df[["partner", "partner_name"]]
     importing_countries = dict(
         zip(importing_countries_df["partner_name"], importing_countries_df["partner"])
@@ -120,7 +121,7 @@ with col5:
     )
     if importing_country:
         trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
-        timeseries_trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
+        timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["partner_name"].isin(importing_country)]
 
 
 min_val = float(0)
@@ -156,6 +157,7 @@ country_data = country_df.to_dict("records")
 country_list = [x["id"] for x in country_data]
 
 for x in country_data:
+    
     row = {
         "data": {
             "id": x["id"],
@@ -185,7 +187,7 @@ for y in trade_data:
                 "id": f"{y['reporter']}-{y['partner']}",
                 "source": y["reporter"],
                 "target": y["partner"],
-                "width": 1,  # Add width to edge data
+                "width": y["weight"],  # Add width to edge data
             }
         }
 
@@ -233,9 +235,15 @@ stylesheet = [
 # Render the graph — layout IS supported here
 # breadthfirst, circle, grid, cose, random
 
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([1, 1])
+
+
 
 with col1:
+    options = ["cose", "breadthfirst", "circle", "grid", "random"]
+    layout = st.selectbox("Layout:", options)
+
+
     selected = cytoscape(
         elements,
         stylesheet,
@@ -247,6 +255,60 @@ with col1:
         key="cytoscape",
 
     )
+
+with col2:
+    graph_data = trade_df
+    graph_data = graph_data[['partner', 'partner_name', 'value']]
+
+    options = [ 'orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
+    layout = st.selectbox("Projection", options)
+
+
+    fig = px.choropleth(
+        graph_data,
+        locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
+        color='value',       # Color intensity by trade volume
+        hover_name='partner_name',
+        color_continuous_scale='Blues',
+        projection=layout,  # World map projection
+        title="World Trade Map",
+        labels={'trade_value': 'Trade Volume'}
+    )
+    fig.update_layout(height=500, margin={"r":0,"t":40,"l":0,"b":0})
+    st.plotly_chart(fig, width='stretch')
+
+
+
+col1, col2 = st.columns([1, 1])
+
+with col1:
+
+    timeseries_trade_df['trade'] = (
+        timeseries_trade_df['reporter'] + ' > ' +  timeseries_trade_df['partner_name']
+    )
+    timeseries_trade_df = timeseries_trade_df[['trade', 'value', 'period']]
+    timeseries_trade_df = timeseries_trade_df.dropna()
+    
+    chart = (alt.Chart(timeseries_trade_df)
+        .mark_line(strokeWidth=3)
+        .encode(
+            x=alt.X('period:Q', title='Period'),
+            y=alt.Y('value:Q', title='Trade Value'),
+            color=alt.Color('trade:N', title='Trade Flow'),
+            strokeDash=alt.StrokeDash('trade:N')
+        )
+        .properties(
+            title='Trade Flow over time',
+            height=500
+        )
+        .interactive()
+    )
+
+    chart
+
+
+
+
 
 
 with col2:
@@ -272,55 +334,11 @@ with col2:
         .properties(height=500, title='Top Trade Flows (in Millions)')
     )
 
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, width='stretch')
 
 
-col1, col2 = st.columns([2, 1])
-
-with col1:
-
-    graph_data = timeseries_trade_df
-    graph_data['trade'] = (
-        graph_data['reporter'] + ' > ' +  graph_data['partner_name']
-    )
-    graph_data = graph_data[['trade', 'value', 'period']]
-    graph_data = graph_data.dropna()
-    
-    chart = (alt.Chart(graph_data)
-        .mark_line(strokeWidth=3)
-        .encode(
-            x=alt.X('period:Q', title='Period'),
-            y=alt.Y('value:Q', title='Trade Value'),
-            color=alt.Color('trade:N', title='Trade Flow'),
-            strokeDash=alt.StrokeDash('trade:N')
-        )
-        .properties(
-            title='Trade Flow over time',
-            height=500
-        )
-        .interactive()
-    )
-
-    chart
 
 
-with col2:
-    graph_data = trade_df
-    graph_data = graph_data[['partner', 'partner_name', 'value']]
-
-    fig = px.choropleth(
-        graph_data,
-        locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
-        color='value',       # Color intensity by trade volume
-        hover_name='partner_name',
-        color_continuous_scale='Blues',
-        projection='natural earth',  # World map projection
-        title="World Trade Map",
-        labels={'trade_value': 'Trade Volume'}
-    )
-
-    fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
-    st.plotly_chart(fig, use_container_width=True)
 
 
 st.dataframe(trade_df, width="stretch")
