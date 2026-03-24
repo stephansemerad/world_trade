@@ -20,12 +20,10 @@ DB_PATH = "sqlite:///trade.db"
 def get_engine():
     return create_engine(DB_PATH)
 
-
 @st.cache_data
 def load_products() -> pd.DataFrame:
     engine = get_engine()
     return pd.read_sql("SELECT id, name FROM products", engine)
-
 
 @st.cache_data
 def load_trades() -> pd.DataFrame:
@@ -42,7 +40,7 @@ def load_trades() -> pd.DataFrame:
         left join countries as r_country on r_country.id == REPORTER
         left join countries as p_country on p_country.id == PARTNER
 
-                where period = 2020
+                where 1 = 1
 
                  and REPORTER not in 
                  ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS')
@@ -65,19 +63,27 @@ if trade_df.empty:
     st.stop()
 
 
-# ── load & filter data ────────────────────────────────────────────────── #
-
-
+# Dropdown and Selectors
+# -----------------------------------------------------------------------
 st.title("🌐 World Trade Map")
 st.write("A simple interactive graph example.")
 
-col1, col2, col3 = st.columns([1, 2, 2])  # Adjust ratios as needed
+col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 2, 2])
 
 with col1:
     options = ["cose", "breadthfirst", "circle", "grid", "random"]
     layout = st.selectbox("Choose:", options)
 
 with col2:
+    year_options = trade_df["period"].unique().tolist()
+    year_options.sort()
+    year_selection = st.selectbox("Select Year:", year_options)
+
+with col3:
+    product_options = trade_df["productcode"].unique().tolist()
+    product_selection = st.selectbox("Select Product:", product_options)
+
+with col4:
     exporting_countries_df = trade_df[["reporter", "reporter_name"]]
     exporting_countries = dict(
         zip(exporting_countries_df["reporter_name"], exporting_countries_df["reporter"])
@@ -87,14 +93,14 @@ with col2:
         options=list(exporting_countries.keys()),
     )
 
-with col3:
+with col5:
     importing_countries_df = trade_df[["partner", "partner_name"]]
-    exporting_countries = dict(
+    importing_countries = dict(
         zip(importing_countries_df["partner_name"], importing_countries_df["partner"])
     )
     importing_country = st.multiselect(
         "Importing Country",
-        options=list(exporting_countries.keys()),
+        options=list(importing_countries.keys()),
     )
 
 min_val = float(trade_df["value"].min())
@@ -112,11 +118,17 @@ trade_df = trade_df[
     (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
 ]
 
+if year_selection:
+    trade_df = trade_df[trade_df["period"] == year_selection ]
+
+
 if exporting_country:
-    trade_df = trade_df[(trade_df["reporter"] == exporting_country)]
+    trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
+
 
 if importing_country:
-    trade_df = trade_df[(trade_df["partner"] == importing_country)]
+    trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
+
 
 
 # Cytoscape
@@ -218,16 +230,30 @@ stylesheet = [
 # Render the graph — layout IS supported here
 # breadthfirst, circle, grid, cose, random
 
-selected = cytoscape(
-    elements,
-    stylesheet,
-    layout={
-        "name": layout,
-        "nodeRepulsion": 400000,  # higher = nodes push apart more
-    },
-    height="500px",
-    key="cytoscape123",
-)
+col1, col2 = st.columns([1, 1])
+
+with col1:
+    selected = cytoscape(
+        elements,
+        stylesheet,
+        layout={
+            "name": layout,
+            "nodeRepulsion": 400000,  # higher = nodes push apart more
+        },
+        height="500px",
+        key="cytoscape123",
+    )
+
+
+with col2:
+    trade_summary = pd.DataFrame({
+    "productcode": ["01-05_Animal", "06-15_Vegetable", "16-24_Food", "25-27_Minerals", 
+                   "28-38_Chemicals", "39-40_Plastic", "84-85_Machinery", "87_Vehicles"],
+    "trade_value": [45230000, 87560000, 124780000, 298450000, 
+                   567890000, 234560000, 1892345000, 1456789000]
+    })
+
+    st.bar_chart(trade_summary.set_index("productcode"))
 
 
 if selected["nodes"]:

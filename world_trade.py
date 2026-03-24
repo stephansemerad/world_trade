@@ -3,28 +3,7 @@ import polars as pl
 import xmltodict
 from rich import print
 import pycountry
-import pycountry_convert as pc
 from datetime import date, datetime
-
-
-def build_lookup() -> dict:
-    lookup = {}
-    for c in pycountry.countries:
-        try:
-            alpha_2 = pc.country_alpha3_to_country_alpha2(c.alpha_3)
-            continent_code = pc.country_alpha2_to_continent_code(alpha_2)
-            region = pc.convert_continent_code_to_continent_name(continent_code)
-        except Exception:
-            region = None
-
-        lookup[c.alpha_3] = {
-            "country_name": c.name,
-            "region": region,
-        }
-    return lookup
-
-
-lookup = build_lookup()
 
 
 # https://medium.com/@amuhryanto/pulling-trade-data-from-the-wb-wits-api-using-python-1787393f8330
@@ -41,7 +20,7 @@ class WorldTrade:
         self.products = self.get_codelist("CL_TS_PRODUCTCODE_WITS")
         self.indicators = self.get_codelist("CL_TS_INDICATOR_WITS")
         self.start = 2010
-        self.end = 2020
+        self.end = date.today().year
 
         self.exporting = "USD"
         self.importing = "MXN"
@@ -69,19 +48,7 @@ class WorldTrade:
     def get_codelist(self, codelist_id: str) -> pl.DataFrame:
         data = self._fetch_xml(f"{BASE_URL}/codelist/WBG_WITS/{codelist_id}")
         codes = data["Structures"]["Codelists"]["Codelist"]["Code"]
-
         df = self._parse_codelist(codes)
-        if codelist_id == "CL_TS_COUNTRY_WITS":
-            df = df.with_columns(
-                [
-                    pl.col("id")
-                    .map_elements(
-                        lambda x: lookup.get(x, {}).get("region"), return_dtype=pl.Utf8
-                    )
-                    .alias("region"),
-                ]
-            )
-
         return df
 
     def query(self) -> pl.DataFrame:

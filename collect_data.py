@@ -5,13 +5,9 @@ import polars as pl
 
 
 DB_PATH = "sqlite:///trade.db"
-YEAR = 2010
-INDICATOR = "XPRT-TRD-VL"  # Export trade value (USD)
 
 
 # ── helpers ───────────────────────────────────────────────────────────── #
-
-
 def save(df, table: str, engine, if_exists="replace"):
     df.to_pandas().to_sql(table, engine, if_exists=if_exists, index=False)
 
@@ -25,13 +21,13 @@ save(w.products, "products", engine)
 # ── 3. Trade data ─────────────────────────────────────────────────── #
 # Drop the trade table so we start fresh on each run.
 with engine.connect() as conn:
-    conn.execute(text("DROP TABLE IF EXISTS trade"))
-    conn.commit()
+    # conn.execute(text("DROP TABLE IF EXISTS trade"))
+    # conn.commit()
     w = WorldTrade()
     countries_df = w.countries
     countries = w.countries.filter(pl.col("id") != "999")["id"].to_list()
 
-    for x in countries:
+    for x in ['ARE']:
         for y in countries:
             if x == y:
                 continue
