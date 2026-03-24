@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, text
 from st_cytoscape import cytoscape
 import altair as alt
 import numpy as np
+import plotly.express as px
 
 
 # ── page config ───────────────────────────────────────────────────────── #
@@ -63,8 +64,14 @@ def load_trades() -> pd.DataFrame:
 
 
 trade_df = load_trades()
+timeseries_trade_df = trade_df
+
 trade_df = trade_df.drop_duplicates()
 trade_df.columns = trade_df.columns.str.lower()
+
+timeseries_trade_df = timeseries_trade_df.drop_duplicates()
+timeseries_trade_df.columns = timeseries_trade_df.columns.str.lower()
+
 
 if trade_df.empty:
     st.warning(f"No trade data.")
@@ -100,7 +107,7 @@ with col4:
     )
     if exporting_country:
         trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
-
+        timeseries_trade_df = trade_df[trade_df["reporter_name"].isin(exporting_country)]
 
 with col5:
     importing_countries_df = trade_df[["partner", "partner_name"]]
@@ -113,6 +120,7 @@ with col5:
     )
     if importing_country:
         trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
+        timeseries_trade_df = trade_df[trade_df["partner_name"].isin(importing_country)]
 
 
 min_val = float(0)
@@ -231,11 +239,13 @@ with col1:
     selected = cytoscape(
         elements,
         stylesheet,
+    height="500px",  # 👈 STRING with "px" - not int!
         layout={
             "name": layout,
             "nodeRepulsion": 400000,  # higher = nodes push apart more
         },
-        key="cytoscape123",
+        key="cytoscape",
+
     )
 
 
@@ -265,71 +275,53 @@ with col2:
     st.altair_chart(chart, use_container_width=True)
 
 
+col1, col2 = st.columns([2, 1])
 
-dates = pd.date_range('2020-01-01', periods=100, freq='ME')  # Fixed 'M' -> 'ME'
-data = pd.DataFrame({
-    'date': np.tile(dates, 4),
-    'value': np.concatenate([
-        np.random.normal(100, 10, 100),   # GCC
-        np.random.normal(150, 15, 100),   # Iran (IRN)
-        np.random.normal(200, 20, 100),   # USA
-        np.random.normal(80, 8, 100)      # China
-    ]),
-    'country': np.repeat(['GCC', 'IRN', 'USA', 'CHN'], 100)
-})
+with col1:
 
-graph_data = trade_df
-
-graph_data['trade'] = (
-    trade_df['reporter'] + ' > ' +  trade_df['partner_name']
-)
-graph_data = graph_data[['trade', 'value', 'period']]
-
-
-# Multiline chart
-chart = (alt.Chart(data)
-    .mark_line(strokeWidth=3)
-    .encode(
-        x=alt.X('period:T', title='Period'),
-        y=alt.Y('value:Q', title='Trade Value'),
-        color=alt.Color('trade:N', title='Trade Flow'),
-        strokeDash=alt.StrokeDash('trade:N')
+    graph_data = timeseries_trade_df
+    graph_data['trade'] = (
+        graph_data['reporter'] + ' > ' +  graph_data['partner_name']
     )
-    .properties(
-        title='Trade Flow over time',
-        width=800,
-        height=500
+    graph_data = graph_data[['trade', 'value', 'period']]
+    graph_data = graph_data.dropna()
+    
+    chart = (alt.Chart(graph_data)
+        .mark_line(strokeWidth=3)
+        .encode(
+            x=alt.X('period:Q', title='Period'),
+            y=alt.Y('value:Q', title='Trade Value'),
+            color=alt.Color('trade:N', title='Trade Flow'),
+            strokeDash=alt.StrokeDash('trade:N')
+        )
+        .properties(
+            title='Trade Flow over time',
+            height=500
+        )
+        .interactive()
     )
-    .interactive()
-)
 
-chart
+    chart
 
 
-if selected["nodes"]:
-    node = selected["nodes"][0]  # First selected node
-    st.write(f"**ID**: `{node}`")
-    # st.write(f"**Label**: {node['data']['label']}")
-    # st.write(f"**Size**: {node['data'].get('size', 'N/A'):.1f}px")
+with col2:
+    graph_data = trade_df
+    graph_data = graph_data[['partner', 'partner_name', 'value']]
 
-    # # Show trade totals (from your node_values calculation)
-    # total_trade = nodes.get(node["data"]["id"], 0)
-    # st.metric("Total Trade Volume", f"{total_trade:.3f}")
+    fig = px.choropleth(
+        graph_data,
+        locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
+        color='value',       # Color intensity by trade volume
+        hover_name='partner_name',
+        color_continuous_scale='Blues',
+        projection='natural earth',  # World map projection
+        title="World Trade Map",
+        labels={'trade_value': 'Trade Volume'}
+    )
 
-    # # Show connected partners
-    # partners = [
-    #     e["data"]["target"]
-    #     for e in selected["edges"]
-    #     if e["data"]["source"] == node["data"]["id"]
-    # ]
-    # partners += [
-    #     e["data"]["source"]
-    #     for e in selected["edges"]
-    #     if e["data"]["target"] == node["data"]["id"]
-    # ]
-    # if partners:
-    #     st.write("**Partners**:", ", ".join(set(partners)))
-else:
-    st.info("👆 Click a node to see details")
+    fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
+    st.plotly_chart(fig, use_container_width=True)
+
 
 st.dataframe(trade_df, width="stretch")
+st.dataframe(timeseries_trade_df, width="stretch")
