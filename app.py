@@ -53,7 +53,7 @@ def load_trades() -> pd.DataFrame:
                  and REPORTER not in 
                  ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS')
                  and PARTNER not in 
-                 ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS', 'ECS', 'OAS', 'LCN', 'SAS')
+                 ('WLD', '999', 'UNS', 'MEA', 'SSF', 'EAS')
 
                  order by value desc
 
