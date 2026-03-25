@@ -5,6 +5,7 @@ from st_cytoscape import cytoscape
 import altair as alt
 import numpy as np
 import plotly.express as px
+import pydeck as pdk
 
 
 # ── page config ───────────────────────────────────────────────────────── #
@@ -84,6 +85,7 @@ col1, col2, col3, col4 = st.columns([1, 1, 2, 2])
 
 
 with col1:
+
     year_options = trade_df["period"].unique()
     year_options = sorted(year_options, reverse=True)
     year_selection = st.selectbox("Select Year:", year_options)
@@ -122,8 +124,15 @@ with col4:
         timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["partner_name"].isin(importing_country)]
 
 
-col1, col2 = st.columns([1, 1])
 
+
+
+
+
+
+
+
+col1, col2 = st.columns([1, 1])
 with col1:
     min_val = float(0)
     max_val = float(trade_df["value"].max())
@@ -138,7 +147,6 @@ with col1:
 
 
 with col2:
-
     min_val = float(0)
     max_val = float(trade_df["weight"].max())
 
@@ -149,6 +157,7 @@ with col2:
     trade_df = trade_df[
         (trade_df["weight"] >= min_slider) & (trade_df["weight"] <= max_slider)
     ]
+
 
 
 # Cytoscape
@@ -203,6 +212,7 @@ for y in trade_data:
                 "id": f"{y['reporter']}-{y['partner']}",
                 "source": y["reporter"],
                 "target": y["partner"],
+                "value": f"{y['weight']/100:.2%}",
                 "width": y["weight"] / 10,  # Add width to edge data
             }
         }
@@ -235,6 +245,12 @@ stylesheet = [
             "line-color": "#aaa",
             "target-arrow-color": "#aaa",
             "width": "data(width)",
+            "label": "data(value)",      # 👈 SHOW VALUE ON EDGE
+            "font-size": "12px",
+            "color": "#666",
+            "text-rotation": "autorotate",  # Follows edge curve
+            "text-margin-y": "-5px",       # Position above edge
+            "text-halign": "center",
         },
     },
     {
@@ -243,19 +259,68 @@ stylesheet = [
             "background-color": "#4A90E2",
             "line-color": "#2C598C",
             "target-arrow-color": "#135AAC",
+            "label": "data(value)",  # Highlight selected
+            "color": "#000",
+            "font-weight": "bold",
         },
     },
 ]
 
 
+
 # Render the graph — layout IS supported here
 # breadthfirst, circle, grid, cose, random
+
+
+trade_dict = {
+    'country0': ['USA', 'UK'],
+    'lon0': [-74.00, -0.13],
+    'lat0': [40.71, 51.51],
+    'country1': ['UK', 'China'],
+    'lon1': [-0.13, 116.40],
+    'lat1': [51.51, 39.90],
+    'value': [100, 200]  # e.g., billions USD
+}
+trade_data = pd.DataFrame(trade_dict)
+
+# Blue ArcLayer
+arc_layer = pdk.Layer(
+    'ArcLayer',
+    trade_data,
+    get_source_position=['lon0', 'lat0'],
+    get_target_position=['lon1', 'lat1'],
+    get_width="value / 10",
+    get_height=0.6,
+    get_tilt_slant=15,
+    get_source_color=[100, 150, 255, 160],  # Blue start
+    get_target_color=[50, 100, 255, 180],   # Blue end
+    pickable=True
+)
+
+view = pdk.ViewState(latitude=20, longitude=0, zoom=1.4, pitch=40)
+
+# Tooltip with country names and value
+deck = pdk.Deck(
+    layers=[arc_layer],
+    initial_view_state=view,
+    map_style=None,
+    tooltip={
+        "html": """
+        <b>{country0}</b> → <b>{country1}</b><br/>
+        Trade Value: ${value}B
+        """,
+        "style": {"backgroundColor": "steelblue", "color": "white"}
+    }
+)
+
+st.pydeck_chart(deck, width='stretch', height=200)
 
 col1, col2 = st.columns([1, 1])
 
 
 
 with col1:
+    st.write("**Cytoscape Network Trade Map**")
     options = ["cose", "breadthfirst", "circle", "grid", "random"]
     layout = st.selectbox("Layout:", options)
 
@@ -273,6 +338,8 @@ with col1:
     )
 
 with col2:
+    st.write("**Map Projection Import Trade Value**")
+
     graph_data = trade_df
     graph_data = graph_data[['partner', 'partner_name', 'value']]
 
@@ -287,7 +354,6 @@ with col2:
         hover_name='partner_name',
         color_continuous_scale='Blues',
         projection=layout,  # World map projection
-        title="World Trade Map",
         labels={'trade_value': 'Trade Volume'}
     )
     fig.update_layout(height=500, margin={"r":0,"t":40,"l":0,"b":0})
@@ -360,13 +426,33 @@ with col2:
 
     st.altair_chart(chart, width='stretch')
 
-
-st.dataframe(trade_df[['partner', 'partner_name']].drop_duplicates())
-
 st.divider()
 
-st.dataframe(trade_df, width="stretch")
-st.dataframe(timeseries_trade_df, width="stretch")
 
+example_data = {
+    'reporter_iso3': ['World'] * 12,
+    'partner_name': ['USA', 'China', 'India', 'Germany', 'Japan', 'UK', 'France', 'Italy', 'South Korea', 'UAE', 'Saudi Arabia', 'Iran'],
+    'partner_iso3': ['USA', 'CHN', 'IND', 'DEU', 'JPN', 'GBR', 'FRA', 'ITA', 'KOR', 'ARE', 'SAU', 'IRN'],
+    'continent': ['North America', 'Asia', 'Asia', 'Europe', 'Asia', 'Europe', 'Europe', 'Europe', 'Asia', 'Asia', 'Asia', 'Asia'],
+    'value': np.random.uniform(50, 500, 12),  # $M trade volume
+    'weight': np.random.uniform(0.02, 0.15, 12),
+    'period': 2024
+}
+df = pd.DataFrame(example_data)
+df['weight'] = df['weight'] / df['weight'].sum()  # Normalize to 1.0
 
+st.dataframe(df, width='stretch')
+fig = px.treemap(
+    df,
+    path=[px.Constant('World'), 'continent', 'partner_name'],
+    values='weight',
+    color='value',
+    hover_data=['partner_iso3', 'value', 'weight'],
+    color_continuous_scale='Blues',
+    color_continuous_midpoint=np.median(df['value'])
+)
+
+fig.update_traces(root_color="#4682B4")  # SteelBlue
+fig.update_layout(height=500)
+st.plotly_chart(fig, width='stretch')
 
