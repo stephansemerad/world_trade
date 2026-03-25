@@ -21,8 +21,9 @@ class Country(Base):
     lon = Column(Float)
     population = Column(Integer)
     
-    partner = relationship("Trade", foreign_keys="Trade.reporter", back_populates="partner")
-    reporter = relationship("Trade", foreign_keys="Trade.partner", back_populates="reporter")
+    # Now back_populates refers to relationships (not columns)
+    trades_as_reporter = relationship("Trade", foreign_keys="Trade.reporter", back_populates="reporter_country")
+    trades_as_partner = relationship("Trade", foreign_keys="Trade.partner", back_populates="partner_country")
 
 class Product(Base):
     __tablename__ = "products"
@@ -39,9 +40,9 @@ class Trade(Base):
     year = Column(Integer, nullable=False)
     value = Column(Float)
 
-    # Relationships
-    reporter_country = relationship("Country", foreign_keys=[reporter])
-    partner_country = relationship("Country", foreign_keys=[partner])
+    # Named relationships for back_populates
+    reporter_country = relationship("Country", foreign_keys=[reporter], back_populates="trades_as_reporter")
+    partner_country = relationship("Country", foreign_keys=[partner], back_populates="trades_as_partner")
     product = relationship("Product")
 
 Base.metadata.drop_all(engine)

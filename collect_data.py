@@ -4,17 +4,33 @@ from world_trade import WorldTrade
 from model import SessionLocal, Country
 from rich import print  
 import pycountry    
+import pycountry_convert as pc
 
 w = WorldTrade()
 session = SessionLocal()
 
 # Countries 
 # -------------------------------------------------------------------------
-countries = w.countries
-print(countries)
+for i in w.countries.iter_rows(named=True):
+    c = Country()
 
-for i 
+    c.iso3 = i['id']
+    c.name = i['name']
 
+    if c.iso3 in ['999']: 
+        continue
+    else:
+        print(c.iso3, c.name)
+        
+        country = pycountry.countries.get(alpha_3=c.iso3)
+        if country:
+            c.iso2 = country.alpha_2 if country else None
+            
+            continent_code = pc.country_alpha2_to_continent_code(country.alpha_2)
+            if continent_code:
+                continent_name = pc.convert_continent_code_to_continent_name(continent_code)  # Fixed!
+                c.region = continent_name
+            
 
 
 
