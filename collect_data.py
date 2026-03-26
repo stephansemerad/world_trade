@@ -73,13 +73,15 @@ session = SessionLocal()
 
 # Trade 
 # -------------------------------------------------------------------------
-countries = session.query(Country).filter(Country.iso_2.in_(['ES', 'SA', 'AE'])).limit(5).all()
+countries_reporter = session.query(Country).filter(Country.iso_2.in_(['ES', 'AE'])).all()
+countries_partner = session.query(Country).all()
+
 products = session.query(Product).all()
 trades = [f"{x.product_id}>{x.reporter}>{x.partner}" for x in session.query(Trade).all()]
 
 for product in products:
-    for reporter in countries:
-        for partner in countries:
+    for reporter in countries_reporter:
+        for partner in countries_partner:
             slug = f'{product.id}>{reporter.iso_3}>{partner.iso_3}'
             print('slug> ', slug)
 
