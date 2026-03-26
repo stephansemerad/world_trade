@@ -8,8 +8,8 @@
     "affiliation_iso_2": "US",
     "lat": -14.305711987770538,
     "lon": -170.7007316174498,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "UM",
@@ -32,8 +32,8 @@
     "affiliation_iso_2": "NZ",
     "lat": -21.22261325339984,
     "lon": -159.78768870952257,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "PF",
@@ -44,8 +44,8 @@
     "affiliation_iso_2": "FR",
     "lat": -17.674684080120677,
     "lon": -149.40041671099763,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "NU",
@@ -56,8 +56,8 @@
     "affiliation_iso_2": "NZ",
     "lat": -19.05230921680393,
     "lon": -169.86878106699083,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "PN",
@@ -80,8 +80,8 @@
     "affiliation_iso_2": "WS",
     "lat": -13.634252953274622,
     "lon": -172.44107655740137,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "TK",
@@ -92,8 +92,8 @@
     "affiliation_iso_2": "NZ",
     "lat": -9.195174767256544,
     "lon": -171.85265950722743,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "TO",
@@ -104,8 +104,8 @@
     "affiliation_iso_2": "TO",
     "lat": -21.15927212823853,
     "lon": -175.20415878511247,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "WF",
@@ -116,8 +116,8 @@
     "affiliation_iso_2": "FR",
     "lat": -14.283442307826675,
     "lon": -178.12735555777184,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "SV",
@@ -128,8 +128,8 @@
     "affiliation_iso_2": "SV",
     "lat": 13.758041517055418,
     "lon": -88.85911489238985,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "GT",
@@ -140,8 +140,8 @@
     "affiliation_iso_2": "GT",
     "lat": 15.820878515352684,
     "lon": -90.31219349119615,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "MX",
@@ -152,8 +152,8 @@
     "affiliation_iso_2": "MX",
     "lat": 23.87436068093592,
     "lon": -101.55399731630118,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "CA",
@@ -164,8 +164,8 @@
     "affiliation_iso_2": "CA",
     "lat": 57.55048004465564,
     "lon": -98.41680517868062,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "AR",
@@ -176,8 +176,8 @@
     "affiliation_iso_2": "AR",
     "lat": -35.697270518120085,
     "lon": -64.53238503843076,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "FK",
@@ -188,8 +188,8 @@
     "affiliation_iso_2": "GB",
     "lat": -51.75901312766726,
     "lon": -58.746646363799854,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "CL",
@@ -200,8 +200,8 @@
     "affiliation_iso_2": "CL",
     "lat": -37.82938283049967,
     "lon": -70.76863431739216,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "EC",
@@ -212,8 +212,8 @@
     "affiliation_iso_2": "EC",
     "lat": -1.5642721388853116,
     "lon": -78.4630326109714,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "PE",
@@ -224,8 +224,8 @@
     "affiliation_iso_2": "PE",
     "lat": -8.522717984240291,
     "lon": -74.11416196781884,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "BO",
@@ -236,8 +236,8 @@
     "affiliation_iso_2": "BO",
     "lat": -16.7312488393574,
     "lon": -64.45209597511206,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "BR",
@@ -248,8 +248,8 @@
     "affiliation_iso_2": "BR",
     "lat": -11.524630416426652,
     "lon": -54.35520660825642,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "PY",
@@ -260,8 +260,8 @@
     "affiliation_iso_2": "PY",
     "lat": -23.42190559259428,
     "lon": -58.38906357428651,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "UY",
@@ -272,8 +272,8 @@
     "affiliation_iso_2": "UY",
     "lat": -32.78195043831093,
     "lon": -56.01919523458085,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "GS",
@@ -284,8 +284,8 @@
     "affiliation_iso_2": "GB",
     "lat": -54.37666443862139,
     "lon": -36.77509575898928,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "AQ",
@@ -308,8 +308,8 @@
     "affiliation_iso_2": "FJ",
     "lat": -17.822470952336204,
     "lon": 177.98144613732626,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "SH",
@@ -320,8 +320,8 @@
     "affiliation_iso_2": "GB",
     "lat": -15.962963318340398,
     "lon": -5.717391620813109,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "AI",
@@ -332,8 +332,8 @@
     "affiliation_iso_2": "GB",
     "lat": 18.222874004219086,
     "lon": -63.06008343771806,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "AG",
@@ -344,8 +344,8 @@
     "affiliation_iso_2": "AG",
     "lat": 17.07146759372967,
     "lon": -61.78530823226373,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "AW",
@@ -356,8 +356,8 @@
     "affiliation_iso_2": "AW",
     "lat": 12.515625722992898,
     "lon": -69.97564014284046,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BS",
@@ -368,8 +368,8 @@
     "affiliation_iso_2": "BS",
     "lat": 24.72162633646784,
     "lon": -78.07275370060313,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BB",
@@ -380,8 +380,8 @@
     "affiliation_iso_2": "BB",
     "lat": 13.183219369337529,
     "lon": -59.557383949150285,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BZ",
@@ -392,8 +392,8 @@
     "affiliation_iso_2": "BZ",
     "lat": 17.24252476647155,
     "lon": -88.68273510023441,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BM",
@@ -404,20 +404,8 @@
     "affiliation_iso_2": "GB",
     "lat": 32.315067430740726,
     "lon": -64.7458500599169,
-    "continent_code": "",
-    "continent_name": ""
-  },
-  {
-    "iso_2": "BQ",
-    "iso_3": "BES",
-    "numeric": "535",
-    "name": "Bonaire",
-    "affiliation": "Netherlands",
-    "affiliation_iso_2": "NL",
-    "lat": 12.180844982440338,
-    "lon": -68.29350445958761,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "VG",
@@ -428,8 +416,8 @@
     "affiliation_iso_2": "GB",
     "lat": 18.42195819619707,
     "lon": -64.62406519257699,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "KY",
@@ -440,8 +428,8 @@
     "affiliation_iso_2": "GB",
     "lat": 19.311231805620288,
     "lon": -81.25203208977878,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "CO",
@@ -452,8 +440,8 @@
     "affiliation_iso_2": "CO",
     "lat": 4.187753877352739,
     "lon": -72.6445066243485,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "CR",
@@ -464,8 +452,8 @@
     "affiliation_iso_2": "CR",
     "lat": 9.863467407406214,
     "lon": -84.14673625701816,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "CU",
@@ -476,8 +464,8 @@
     "affiliation_iso_2": "CU",
     "lat": 21.476176522869448,
     "lon": -79.69817857618705,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "CW",
@@ -488,8 +476,8 @@
     "affiliation_iso_2": "NL",
     "lat": 12.199996647939832,
     "lon": -68.96939768599042,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "DM",
@@ -500,8 +488,8 @@
     "affiliation_iso_2": "DM",
     "lat": 15.429269860940511,
     "lon": -61.360471946942994,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "DO",
@@ -512,8 +500,8 @@
     "affiliation_iso_2": "DO",
     "lat": 18.77954818522993,
     "lon": -70.43495198520012,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "GF",
@@ -524,8 +512,8 @@
     "affiliation_iso_2": "FR",
     "lat": 3.857429742497078,
     "lon": -53.32232307156624,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "GD",
@@ -536,8 +524,8 @@
     "affiliation_iso_2": "GD",
     "lat": 12.112926656338908,
     "lon": -61.67937937204098,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "GP",
@@ -548,8 +536,8 @@
     "affiliation_iso_2": "FR",
     "lat": 16.24420002705553,
     "lon": -61.54382262282755,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "GY",
@@ -560,8 +548,8 @@
     "affiliation_iso_2": "GY",
     "lat": 4.68211981385056,
     "lon": -58.91352612754667,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "HT",
@@ -572,8 +560,8 @@
     "affiliation_iso_2": "HT",
     "lat": 18.883520486983567,
     "lon": -72.89291379842,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "HN",
@@ -584,8 +572,8 @@
     "affiliation_iso_2": "HN",
     "lat": 14.740370695750006,
     "lon": -86.49251679006962,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "JM",
@@ -596,8 +584,8 @@
     "affiliation_iso_2": "JM",
     "lat": 18.12207889341651,
     "lon": -77.30358894542778,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "MQ",
@@ -608,8 +596,8 @@
     "affiliation_iso_2": "FR",
     "lat": 14.642697353597644,
     "lon": -61.01432380875083,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "MS",
@@ -620,8 +608,8 @@
     "affiliation_iso_2": "GB",
     "lat": 16.735363391460357,
     "lon": -62.18693281256255,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "NI",
@@ -632,8 +620,8 @@
     "affiliation_iso_2": "NI",
     "lat": 12.893566631930554,
     "lon": -85.016088327669,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "PA",
@@ -644,8 +632,8 @@
     "affiliation_iso_2": "PA",
     "lat": 8.439536749576892,
     "lon": -80.14428761482796,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "PR",
@@ -656,20 +644,20 @@
     "affiliation_iso_2": "US",
     "lat": 18.216224086610914,
     "lon": -66.49425339593509,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BQ",
     "iso_3": "BES",
     "numeric": "535",
-    "name": "Saba",
+    "name": "Bonaire, Sint Eustatius and Saba",
     "affiliation": "Netherlands",
     "affiliation_iso_2": "NL",
     "lat": 17.632512616389718,
     "lon": -63.23739481909494,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "BL",
@@ -680,20 +668,8 @@
     "affiliation_iso_2": "FR",
     "lat": 17.90561691241738,
     "lon": -62.83051610005156,
-    "continent_code": "",
-    "continent_name": ""
-  },
-  {
-    "iso_2": "BQ",
-    "iso_3": "BES",
-    "numeric": "535",
-    "name": "Saint Eustatius",
-    "affiliation": "Netherlands",
-    "affiliation_iso_2": "NL",
-    "lat": 17.4919042294197,
-    "lon": -62.97823058944503,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "KN",
@@ -704,8 +680,8 @@
     "affiliation_iso_2": "KN",
     "lat": 17.314736299587768,
     "lon": -62.74560385895787,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "LC",
@@ -716,8 +692,8 @@
     "affiliation_iso_2": "LC",
     "lat": 13.895749185129906,
     "lon": -60.9689510935251,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "MF",
@@ -728,8 +704,8 @@
     "affiliation_iso_2": "FR",
     "lat": 18.078012113224464,
     "lon": -63.06678525361946,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "PM",
@@ -740,8 +716,8 @@
     "affiliation_iso_2": "FR",
     "lat": 46.95153913615198,
     "lon": -56.32465353437558,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "VC",
@@ -752,8 +728,8 @@
     "affiliation_iso_2": "VC",
     "lat": 13.254808122970651,
     "lon": -61.19376635439304,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "SX",
@@ -776,8 +752,8 @@
     "affiliation_iso_2": "SR",
     "lat": 4.098723595920171,
     "lon": -55.855514311561286,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "TT",
@@ -788,8 +764,8 @@
     "affiliation_iso_2": "TT",
     "lat": 10.415515638298093,
     "lon": -61.37236579976247,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "TC",
@@ -800,8 +776,8 @@
     "affiliation_iso_2": "GB",
     "lat": 21.799865427483745,
     "lon": -71.74058946811508,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "VI",
@@ -812,8 +788,8 @@
     "affiliation_iso_2": "US",
     "lat": 17.738009708772523,
     "lon": -64.76155341409797,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "VE",
@@ -824,8 +800,8 @@
     "affiliation_iso_2": "VE",
     "lat": 7.148324760507107,
     "lon": -66.36492135985132,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "SA",
+    "continent_name": "South America"
   },
   {
     "iso_2": "BF",
@@ -836,8 +812,8 @@
     "affiliation_iso_2": "BF",
     "lat": 12.108709036312735,
     "lon": -1.6932816211842323,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CV",
@@ -848,8 +824,8 @@
     "affiliation_iso_2": "CV",
     "lat": 15.076411518651645,
     "lon": -23.63401005900474,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CI",
@@ -860,8 +836,8 @@
     "affiliation_iso_2": "CI",
     "lat": 7.536779279421307,
     "lon": -5.571710194917734,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GM",
@@ -872,8 +848,8 @@
     "affiliation_iso_2": "GM",
     "lat": 13.428617959189328,
     "lon": -15.383380385869662,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GH",
@@ -884,8 +860,8 @@
     "affiliation_iso_2": "GH",
     "lat": 7.94530467243628,
     "lon": -1.219233362526581,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GI",
@@ -896,8 +872,8 @@
     "affiliation_iso_2": "GB",
     "lat": 36.14022671336082,
     "lon": -5.345549484594358,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "GN",
@@ -908,8 +884,8 @@
     "affiliation_iso_2": "GN",
     "lat": 10.255986541378112,
     "lon": -10.986948848040218,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GW",
@@ -920,8 +896,8 @@
     "affiliation_iso_2": "GW",
     "lat": 11.980075324820504,
     "lon": -14.980186756910848,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "LR",
@@ -932,8 +908,8 @@
     "affiliation_iso_2": "LR",
     "lat": 6.52012979398834,
     "lon": -9.258988935497618,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ML",
@@ -944,8 +920,8 @@
     "affiliation_iso_2": "ML",
     "lat": 17.168146208584837,
     "lon": -4.346399841781153,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MR",
@@ -956,8 +932,8 @@
     "affiliation_iso_2": "MR",
     "lat": 20.466731212820022,
     "lon": -10.495079045035716,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MA",
@@ -968,8 +944,8 @@
     "affiliation_iso_2": "MA",
     "lat": 28.687598134979325,
     "lon": -8.817212587250811,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "PT",
@@ -980,8 +956,8 @@
     "affiliation_iso_2": "PT",
     "lat": 39.67529214702138,
     "lon": -7.933662183874006,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SN",
@@ -992,8 +968,8 @@
     "affiliation_iso_2": "SN",
     "lat": 14.228861491763402,
     "lon": -14.610875368352303,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "SL",
@@ -1004,8 +980,8 @@
     "affiliation_iso_2": "SL",
     "lat": 8.561330384750587,
     "lon": -11.78656695731115,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GL",
@@ -1016,8 +992,8 @@
     "affiliation_iso_2": "DK",
     "lat": 74.16847218965994,
     "lon": -42.07567788066985,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "GG",
@@ -1028,8 +1004,8 @@
     "affiliation_iso_2": "GB",
     "lat": 49.45870771378872,
     "lon": -2.576392582891568,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "IE",
@@ -1040,8 +1016,8 @@
     "affiliation_iso_2": "IE",
     "lat": 53.30489539816495,
     "lon": -8.241128545554096,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "IM",
@@ -1052,8 +1028,8 @@
     "affiliation_iso_2": "GB",
     "lat": 54.22855301008011,
     "lon": -4.532995055468449,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "JE",
@@ -1064,8 +1040,8 @@
     "affiliation_iso_2": "GB",
     "lat": 49.21539692572431,
     "lon": -2.129160116265357,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "GB",
@@ -1076,8 +1052,8 @@
     "affiliation_iso_2": "GB",
     "lat": 53.97844735080214,
     "lon": -2.852943909329258,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "IS",
@@ -1088,8 +1064,8 @@
     "affiliation_iso_2": "IS",
     "lat": 65.12360920205514,
     "lon": -19.05682967106099,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "FO",
@@ -1100,8 +1076,8 @@
     "affiliation_iso_2": "DK",
     "lat": 62.13089628149535,
     "lon": -6.981106091312284,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SJ",
@@ -1112,8 +1088,8 @@
     "affiliation_iso_2": "NO",
     "lat": 78.57318936469626,
     "lon": 16.036378851505283,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "BV",
@@ -1124,8 +1100,8 @@
     "affiliation_iso_2": "NO",
     "lat": -54.42316679395248,
     "lon": 3.411969465057627,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AN",
+    "continent_name": "Antarctica"
   },
   {
     "iso_2": "NZ",
@@ -1136,8 +1112,8 @@
     "affiliation_iso_2": "NZ",
     "lat": -43.82765432544426,
     "lon": 170.69035541428696,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "AO",
@@ -1148,8 +1124,8 @@
     "affiliation_iso_2": "AO",
     "lat": -12.167424062667942,
     "lon": 17.651768783079,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "BW",
@@ -1160,8 +1136,8 @@
     "affiliation_iso_2": "BW",
     "lat": -22.236609002062902,
     "lon": 23.85779956995608,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "BI",
@@ -1172,8 +1148,8 @@
     "affiliation_iso_2": "BI",
     "lat": -3.261251993278643,
     "lon": 29.88518227845293,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "KM",
@@ -1184,8 +1160,8 @@
     "affiliation_iso_2": "KM",
     "lat": -11.658861474508493,
     "lon": 43.34826587429403,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CG",
@@ -1196,8 +1172,8 @@
     "affiliation_iso_2": "CG",
     "lat": -0.7294391595233845,
     "lon": 14.879732849491392,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CD",
@@ -1208,8 +1184,8 @@
     "affiliation_iso_2": "CD",
     "lat": -3.338629596207896,
     "lon": 23.419827574282188,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GA",
@@ -1220,8 +1196,8 @@
     "affiliation_iso_2": "GA",
     "lat": -0.628448459921234,
     "lon": 11.839410898545754,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "KE",
@@ -1232,8 +1208,8 @@
     "affiliation_iso_2": "KE",
     "lat": 0.6899182318376179,
     "lon": 37.95309411262371,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "LS",
@@ -1244,8 +1220,8 @@
     "affiliation_iso_2": "LS",
     "lat": -29.60168116924817,
     "lon": 28.24475317864227,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MW",
@@ -1256,20 +1232,8 @@
     "affiliation_iso_2": "MW",
     "lat": -13.128986464184024,
     "lon": 34.23441182298881,
-    "continent_code": "",
-    "continent_name": ""
-  },
-  {
-    "iso_2": "TF",
-    "iso_3": "ATF",
-    "numeric": "260",
-    "name": "Juan De Nova Island",
-    "affiliation": "France",
-    "affiliation_iso_2": "FR",
-    "lat": -17.06449193630804,
-    "lon": 42.74374761089645,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MZ",
@@ -1280,8 +1244,8 @@
     "affiliation_iso_2": "MZ",
     "lat": -17.525230309488748,
     "lon": 35.208577031290176,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": NaN,
@@ -1292,8 +1256,8 @@
     "affiliation_iso_2": NaN,
     "lat": -21.90858163281473,
     "lon": 18.16451345845268,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "RW",
@@ -1304,8 +1268,8 @@
     "affiliation_iso_2": "RW",
     "lat": -2.014687460047154,
     "lon": 29.91943968176408,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ST",
@@ -1316,8 +1280,8 @@
     "affiliation_iso_2": "ST",
     "lat": 0.2274470429479377,
     "lon": 6.606158796857607,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ZA",
@@ -1328,8 +1292,8 @@
     "affiliation_iso_2": "ZA",
     "lat": -28.55361930679731,
     "lon": 24.75252746489084,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "SZ",
@@ -1340,8 +1304,8 @@
     "affiliation_iso_2": "SZ",
     "lat": -26.562540935608705,
     "lon": 31.510685746082007,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "TZ",
@@ -1352,8 +1316,8 @@
     "affiliation_iso_2": "TZ",
     "lat": -6.355794440041147,
     "lon": 34.81832206060381,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ZM",
@@ -1364,8 +1328,8 @@
     "affiliation_iso_2": "ZM",
     "lat": -13.162832953186246,
     "lon": 27.75521363430896,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ZW",
@@ -1376,8 +1340,8 @@
     "affiliation_iso_2": "ZW",
     "lat": -18.92700121981475,
     "lon": 29.717829640720844,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "IO",
@@ -1388,8 +1352,8 @@
     "affiliation_iso_2": "GB",
     "lat": -7.323548444385743,
     "lon": 72.43501618476016,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TF",
@@ -1412,8 +1376,8 @@
     "affiliation_iso_2": "AU",
     "lat": -53.084170035513736,
     "lon": 73.49298560844045,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AN",
+    "continent_name": "Antarctica"
   },
   {
     "iso_2": "MG",
@@ -1424,8 +1388,8 @@
     "affiliation_iso_2": "MG",
     "lat": -19.04163612493041,
     "lon": 46.68493466832544,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MU",
@@ -1436,8 +1400,8 @@
     "affiliation_iso_2": "MU",
     "lat": -20.28142317475198,
     "lon": 57.56415671066546,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "YT",
@@ -1448,20 +1412,8 @@
     "affiliation_iso_2": "FR",
     "lat": -12.824468416301052,
     "lon": 45.12814232703106,
-    "continent_code": "",
-    "continent_name": ""
-  },
-  {
-    "iso_2": "TF",
-    "iso_3": "ATF",
-    "numeric": "260",
-    "name": "Glorioso Islands",
-    "affiliation": "France",
-    "affiliation_iso_2": "FR",
-    "lat": -11.566224871643415,
-    "lon": 47.29094808154338,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "RE",
@@ -1472,8 +1424,8 @@
     "affiliation_iso_2": "FR",
     "lat": -21.119825460665105,
     "lon": 55.54393506194689,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "SC",
@@ -1484,8 +1436,8 @@
     "affiliation_iso_2": "SC",
     "lat": -4.660002318822744,
     "lon": 55.47250789595527,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "DZ",
@@ -1496,8 +1448,8 @@
     "affiliation_iso_2": "DZ",
     "lat": 28.350969744889056,
     "lon": 2.655846471976913,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "BJ",
@@ -1508,8 +1460,8 @@
     "affiliation_iso_2": "BJ",
     "lat": 9.503013199615893,
     "lon": 2.305714528830206,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CM",
@@ -1520,8 +1472,8 @@
     "affiliation_iso_2": "CM",
     "lat": 6.294168487480992,
     "lon": 12.948474142398265,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CF",
@@ -1532,8 +1484,8 @@
     "affiliation_iso_2": "CF",
     "lat": 6.331390033944319,
     "lon": 20.520743419397256,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "TD",
@@ -1544,8 +1496,8 @@
     "affiliation_iso_2": "TD",
     "lat": 15.283493546654505,
     "lon": 18.427113900363025,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GQ",
@@ -1556,8 +1508,8 @@
     "affiliation_iso_2": "GQ",
     "lat": 1.595464393659073,
     "lon": 10.425456672353825,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "KI",
@@ -1568,8 +1520,8 @@
     "affiliation_iso_2": "KI",
     "lat": 1.8676673749241064,
     "lon": -157.39024189323504,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "LY",
@@ -1580,8 +1532,8 @@
     "affiliation_iso_2": "LY",
     "lat": 27.202915771690797,
     "lon": 17.91133392454237,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "MT",
@@ -1592,8 +1544,8 @@
     "affiliation_iso_2": "MT",
     "lat": 35.890522650899314,
     "lon": 14.441922442508494,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "NE",
@@ -1604,8 +1556,8 @@
     "affiliation_iso_2": "NE",
     "lat": 17.08105392407292,
     "lon": 8.86863247002646,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "NG",
@@ -1616,8 +1568,8 @@
     "affiliation_iso_2": "NG",
     "lat": 9.61029352034213,
     "lon": 8.147714845256194,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "TG",
@@ -1628,8 +1580,8 @@
     "affiliation_iso_2": "TG",
     "lat": 8.660743037717811,
     "lon": 0.8990857571109684,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "TN",
@@ -1640,8 +1592,8 @@
     "affiliation_iso_2": "TN",
     "lat": 34.08636179565723,
     "lon": 9.65587551697984,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "CY",
@@ -1652,8 +1604,8 @@
     "affiliation_iso_2": "CY",
     "lat": 35.11700416345239,
     "lon": 33.375346009199205,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "DJ",
@@ -1664,8 +1616,8 @@
     "affiliation_iso_2": "DJ",
     "lat": 11.750235727618804,
     "lon": 42.61349689878951,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "EG",
@@ -1676,8 +1628,8 @@
     "affiliation_iso_2": "EG",
     "lat": 26.60517034450628,
     "lon": 30.240135435012338,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ER",
@@ -1688,8 +1640,8 @@
     "affiliation_iso_2": "ER",
     "lat": 15.005533147667684,
     "lon": 39.2672401449901,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "ET",
@@ -1700,8 +1652,8 @@
     "affiliation_iso_2": "ET",
     "lat": 8.729389557048396,
     "lon": 39.91490288654428,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "GR",
@@ -1712,8 +1664,8 @@
     "affiliation_iso_2": "GR",
     "lat": 39.42012261727978,
     "lon": 23.11036893616188,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "IQ",
@@ -1724,8 +1676,8 @@
     "affiliation_iso_2": "IQ",
     "lat": 33.105075667527906,
     "lon": 43.83252918105688,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "IL",
@@ -1736,8 +1688,8 @@
     "affiliation_iso_2": "IL",
     "lat": 31.513542220043195,
     "lon": 35.027923472437024,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "JO",
@@ -1748,8 +1700,8 @@
     "affiliation_iso_2": "JO",
     "lat": 31.38706488444916,
     "lon": 36.95728884547246,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "LB",
@@ -1760,8 +1712,8 @@
     "affiliation_iso_2": "LB",
     "lat": 33.91160170722086,
     "lon": 35.89651946324749,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "PS",
@@ -1772,8 +1724,8 @@
     "affiliation_iso_2": "PS",
     "lat": 31.930818736453883,
     "lon": 35.24251184154588,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "SS",
@@ -1784,8 +1736,8 @@
     "affiliation_iso_2": "SS",
     "lat": 7.657782041763295,
     "lon": 30.3851856901788,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "SD",
@@ -1796,8 +1748,8 @@
     "affiliation_iso_2": "SD",
     "lat": 15.67060230984256,
     "lon": 29.951458283594064,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "SY",
@@ -1808,8 +1760,8 @@
     "affiliation_iso_2": "SY",
     "lat": 35.09751106058316,
     "lon": 38.5117323139514,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TR",
@@ -1820,8 +1772,8 @@
     "affiliation_iso_2": "TR",
     "lat": 38.93207363123396,
     "lon": 35.56886764076691,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "UG",
@@ -1832,8 +1784,8 @@
     "affiliation_iso_2": "UG",
     "lat": 1.2821729218416205,
     "lon": 32.34371768463123,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "AD",
@@ -1844,8 +1796,8 @@
     "affiliation_iso_2": "AD",
     "lat": 42.54859834854764,
     "lon": 1.5802243611232871,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "US",
@@ -1856,8 +1808,8 @@
     "affiliation_iso_2": "US",
     "lat": 38.8208089190304,
     "lon": -96.3316166082964,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "NA",
+    "continent_name": "North America"
   },
   {
     "iso_2": "FR",
@@ -1868,8 +1820,8 @@
     "affiliation_iso_2": "FR",
     "lat": 46.6423682169416,
     "lon": 2.1940236627886227,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "LI",
@@ -1880,8 +1832,8 @@
     "affiliation_iso_2": "LI",
     "lat": 47.14627562133036,
     "lon": 9.547674672376376,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "MC",
@@ -1892,8 +1844,8 @@
     "affiliation_iso_2": "MC",
     "lat": 43.74798224995656,
     "lon": 7.412820873271196,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "CH",
@@ -1904,8 +1856,8 @@
     "affiliation_iso_2": "CH",
     "lat": 46.73678128684938,
     "lon": 8.286928794895285,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "BE",
@@ -1916,8 +1868,8 @@
     "affiliation_iso_2": "BE",
     "lat": 50.6182138854095,
     "lon": 4.675010154696485,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "DE",
@@ -1928,8 +1880,8 @@
     "affiliation_iso_2": "DE",
     "lat": 51.08304539800482,
     "lon": 10.426171427430804,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "LU",
@@ -1940,8 +1892,8 @@
     "affiliation_iso_2": "LU",
     "lat": 49.77523454542369,
     "lon": 6.103230338458876,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "NL",
@@ -1952,8 +1904,8 @@
     "affiliation_iso_2": "NL",
     "lat": 52.134054128923886,
     "lon": 5.554136426128487,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "AL",
@@ -1964,8 +1916,8 @@
     "affiliation_iso_2": "AL",
     "lat": 41.14165894891656,
     "lon": 20.061082767269493,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "AT",
@@ -1976,8 +1928,8 @@
     "affiliation_iso_2": "AT",
     "lat": 47.631858269895794,
     "lon": 13.797778364631036,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "BA",
@@ -1988,8 +1940,8 @@
     "affiliation_iso_2": "BA",
     "lat": 44.14415356126429,
     "lon": 17.83467240787538,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "HR",
@@ -2000,8 +1952,8 @@
     "affiliation_iso_2": "HR",
     "lat": 44.91192100856702,
     "lon": 16.625761129583374,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "CZ",
@@ -2012,8 +1964,8 @@
     "affiliation_iso_2": "CZ",
     "lat": 49.74917370930982,
     "lon": 15.383273292023532,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "DK",
@@ -2024,8 +1976,8 @@
     "affiliation_iso_2": "DK",
     "lat": 56.00118817971057,
     "lon": 9.378670542409406,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "HU",
@@ -2036,8 +1988,8 @@
     "affiliation_iso_2": "HU",
     "lat": 47.22527332486294,
     "lon": 19.39620048366142,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "IT",
@@ -2048,8 +2000,8 @@
     "affiliation_iso_2": "IT",
     "lat": 42.98201127614267,
     "lon": 12.763657166123137,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "ME",
@@ -2060,8 +2012,8 @@
     "affiliation_iso_2": "ME",
     "lat": 42.73694835210454,
     "lon": 19.29505087156758,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "PL",
@@ -2072,8 +2024,8 @@
     "affiliation_iso_2": "PL",
     "lat": 52.06848055692473,
     "lon": 19.43573279234468,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SM",
@@ -2084,8 +2036,8 @@
     "affiliation_iso_2": "SM",
     "lat": 43.942820729097896,
     "lon": 12.461278349581722,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "RS",
@@ -2096,8 +2048,8 @@
     "affiliation_iso_2": "RS",
     "lat": 44.02679870131969,
     "lon": 20.85677444395745,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SK",
@@ -2108,8 +2060,8 @@
     "affiliation_iso_2": "SK",
     "lat": 48.69808390520484,
     "lon": 19.58101536249097,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SI",
@@ -2120,8 +2072,8 @@
     "affiliation_iso_2": "SI",
     "lat": 46.13759229564504,
     "lon": 14.89063689997378,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "MK",
@@ -2132,8 +2084,8 @@
     "affiliation_iso_2": "MK",
     "lat": 41.59402890143112,
     "lon": 21.70998923872772,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "VA",
@@ -2156,8 +2108,8 @@
     "affiliation_iso_2": "NO",
     "lat": 64.97775882947745,
     "lon": 16.670259272390894,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "SE",
@@ -2168,8 +2120,8 @@
     "affiliation_iso_2": "SE",
     "lat": 62.73420986108448,
     "lon": 17.062431988004956,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "BY",
@@ -2180,8 +2132,8 @@
     "affiliation_iso_2": "BY",
     "lat": 53.46791374543163,
     "lon": 27.964252054715104,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "BG",
@@ -2192,8 +2144,8 @@
     "affiliation_iso_2": "BG",
     "lat": 42.82043677302438,
     "lon": 25.251739122561908,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "EE",
@@ -2204,8 +2156,8 @@
     "affiliation_iso_2": "EE",
     "lat": 58.64810831123104,
     "lon": 25.916870250633806,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "FI",
@@ -2216,8 +2168,8 @@
     "affiliation_iso_2": "FI",
     "lat": 65.01578959749911,
     "lon": 25.65738433454702,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "GE",
@@ -2228,8 +2180,8 @@
     "affiliation_iso_2": "GE",
     "lat": 42.17986277737226,
     "lon": 43.37886653411224,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "LV",
@@ -2240,8 +2192,8 @@
     "affiliation_iso_2": "LV",
     "lat": 56.81385304755416,
     "lon": 24.693671325654403,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "LT",
@@ -2252,8 +2204,8 @@
     "affiliation_iso_2": "LT",
     "lat": 55.29437393417175,
     "lon": 23.94602160501353,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "MD",
@@ -2264,8 +2216,8 @@
     "affiliation_iso_2": "MD",
     "lat": 47.0725674580696,
     "lon": 28.391111865941348,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "RO",
@@ -2276,8 +2228,8 @@
     "affiliation_iso_2": "RO",
     "lat": 45.82454894397586,
     "lon": 25.09415820156329,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "UA",
@@ -2288,8 +2240,8 @@
     "affiliation_iso_2": "UA",
     "lat": 48.657532515563794,
     "lon": 31.27377208442636,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "AF",
@@ -2300,8 +2252,8 @@
     "affiliation_iso_2": "AF",
     "lat": 34.13402601376932,
     "lon": 66.59216131095278,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "BH",
@@ -2312,8 +2264,8 @@
     "affiliation_iso_2": "BH",
     "lat": 26.04798501537066,
     "lon": 50.540695402276775,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "IN",
@@ -2324,8 +2276,8 @@
     "affiliation_iso_2": "IN",
     "lat": 23.58630056774672,
     "lon": 81.17300408530181,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "IR",
@@ -2336,8 +2288,8 @@
     "affiliation_iso_2": "IR",
     "lat": 32.906023742890056,
     "lon": 54.23707700106544,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "KW",
@@ -2348,8 +2300,8 @@
     "affiliation_iso_2": "KW",
     "lat": 29.28136096544309,
     "lon": 47.56311109320184,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "MV",
@@ -2360,8 +2312,8 @@
     "affiliation_iso_2": "MV",
     "lat": -0.6065577168009924,
     "lon": 73.10076245140479,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "NP",
@@ -2372,8 +2324,8 @@
     "affiliation_iso_2": "NP",
     "lat": 28.300920699755657,
     "lon": 84.1338898313567,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "OM",
@@ -2384,8 +2336,8 @@
     "affiliation_iso_2": "OM",
     "lat": 20.7242833183209,
     "lon": 55.841088119829,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "PK",
@@ -2396,8 +2348,8 @@
     "affiliation_iso_2": "PK",
     "lat": 30.11618837141088,
     "lon": 69.08835090769651,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "QA",
@@ -2408,8 +2360,8 @@
     "affiliation_iso_2": "QA",
     "lat": 25.318528486425382,
     "lon": 51.19794918743203,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "SA",
@@ -2420,8 +2372,8 @@
     "affiliation_iso_2": "SA",
     "lat": 24.136038144757897,
     "lon": 44.6009581782256,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "SO",
@@ -2432,8 +2384,8 @@
     "affiliation_iso_2": "SO",
     "lat": 6.524534573103924,
     "lon": 45.40037867243972,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AF",
+    "continent_name": "Africa"
   },
   {
     "iso_2": "LK",
@@ -2444,8 +2396,8 @@
     "affiliation_iso_2": "LK",
     "lat": 7.696630939329944,
     "lon": 80.66931169770622,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TJ",
@@ -2456,8 +2408,8 @@
     "affiliation_iso_2": "TJ",
     "lat": 38.56933138382972,
     "lon": 70.94215281065698,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TM",
@@ -2468,8 +2420,8 @@
     "affiliation_iso_2": "TM",
     "lat": 39.06069118001429,
     "lon": 58.4577357627054,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "AE",
@@ -2480,8 +2432,8 @@
     "affiliation_iso_2": "AE",
     "lat": 24.18250292309135,
     "lon": 54.27920525789581,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "YE",
@@ -2492,8 +2444,8 @@
     "affiliation_iso_2": "YE",
     "lat": 16.001392616307445,
     "lon": 47.46815793206386,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "AM",
@@ -2504,8 +2456,8 @@
     "affiliation_iso_2": "AM",
     "lat": 40.17841274230679,
     "lon": 45.05490831965259,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "AZ",
@@ -2516,8 +2468,8 @@
     "affiliation_iso_2": "AZ",
     "lat": 40.3920509942049,
     "lon": 48.63459267064432,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "KZ",
@@ -2528,8 +2480,8 @@
     "affiliation_iso_2": "KZ",
     "lat": 47.64146519517684,
     "lon": 66.3759193479301,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "KG",
@@ -2540,8 +2492,8 @@
     "affiliation_iso_2": "KG",
     "lat": 41.35698905438358,
     "lon": 74.17532903468319,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "UZ",
@@ -2552,8 +2504,8 @@
     "affiliation_iso_2": "UZ",
     "lat": 41.4879065244633,
     "lon": 63.8548297593985,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "CX",
@@ -2564,8 +2516,8 @@
     "affiliation_iso_2": "AU",
     "lat": -10.446440802183416,
     "lon": 105.70209512200547,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "CC",
@@ -2576,8 +2528,8 @@
     "affiliation_iso_2": "AU",
     "lat": -12.171249450199545,
     "lon": 96.83688767323002,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "ID",
@@ -2588,8 +2540,8 @@
     "affiliation_iso_2": "ID",
     "lat": 0.1559197995903765,
     "lon": 113.96538246847302,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TL",
@@ -2612,8 +2564,8 @@
     "affiliation_iso_2": "AU",
     "lat": -25.69733767398308,
     "lon": 134.02277170916162,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "NR",
@@ -2624,8 +2576,8 @@
     "affiliation_iso_2": "NR",
     "lat": -0.5221021440668993,
     "lon": 166.92937633139178,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "NC",
@@ -2636,8 +2588,8 @@
     "affiliation_iso_2": "FR",
     "lat": -21.33003372660827,
     "lon": 165.50767040438612,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "NF",
@@ -2648,8 +2600,8 @@
     "affiliation_iso_2": "AU",
     "lat": -29.03765444504628,
     "lon": 167.95259597483337,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "PG",
@@ -2660,8 +2612,8 @@
     "affiliation_iso_2": "PG",
     "lat": -7.156912819152135,
     "lon": 144.8348942994695,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "SB",
@@ -2672,8 +2624,8 @@
     "affiliation_iso_2": "SB",
     "lat": -9.613104734596517,
     "lon": 160.16475795033884,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "TV",
@@ -2684,8 +2636,8 @@
     "affiliation_iso_2": "TV",
     "lat": -8.514701506447222,
     "lon": 179.217833977593,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "VU",
@@ -2696,8 +2648,8 @@
     "affiliation_iso_2": "VU",
     "lat": -15.189132121699332,
     "lon": 166.84912735669738,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "KH",
@@ -2708,8 +2660,8 @@
     "affiliation_iso_2": "KH",
     "lat": 12.699186865507777,
     "lon": 105.039730786807,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "LA",
@@ -2720,8 +2672,8 @@
     "affiliation_iso_2": "LA",
     "lat": 18.11728273687328,
     "lon": 103.76375899026448,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "MY",
@@ -2732,8 +2684,8 @@
     "affiliation_iso_2": "MY",
     "lat": 3.6716608556387857,
     "lon": 114.63330303992868,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "MM",
@@ -2744,8 +2696,8 @@
     "affiliation_iso_2": "MM",
     "lat": 19.901227931399877,
     "lon": 97.08892285397344,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "SG",
@@ -2756,8 +2708,8 @@
     "affiliation_iso_2": "SG",
     "lat": 1.3528251890006349,
     "lon": 103.81025757634052,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "TH",
@@ -2768,8 +2720,8 @@
     "affiliation_iso_2": "TH",
     "lat": 13.66222784745538,
     "lon": 101.08675116214552,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "VN",
@@ -2780,8 +2732,8 @@
     "affiliation_iso_2": "VN",
     "lat": 16.517347170839393,
     "lon": 105.91338832758704,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "BD",
@@ -2792,8 +2744,8 @@
     "affiliation_iso_2": "BD",
     "lat": 23.673728665121,
     "lon": 90.43212562608612,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "BT",
@@ -2804,8 +2756,8 @@
     "affiliation_iso_2": "BT",
     "lat": 27.42163933959824,
     "lon": 90.4671664717386,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "CN",
@@ -2816,8 +2768,8 @@
     "affiliation_iso_2": "CN",
     "lat": 38.07325481105728,
     "lon": 104.69113855849604,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "BN",
@@ -2828,8 +2780,8 @@
     "affiliation_iso_2": "BN",
     "lat": 4.543205889917609,
     "lon": 114.6430958360464,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "PH",
@@ -2840,8 +2792,8 @@
     "affiliation_iso_2": "PH",
     "lat": 15.586542251094242,
     "lon": 121.82208941416744,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "KR",
@@ -2852,8 +2804,8 @@
     "affiliation_iso_2": "KR",
     "lat": 36.402386712544114,
     "lon": 127.76224551357647,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "MN",
@@ -2864,8 +2816,8 @@
     "affiliation_iso_2": "MN",
     "lat": 47.08644454604851,
     "lon": 103.3987360327455,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "KP",
@@ -2876,8 +2828,8 @@
     "affiliation_iso_2": "KP",
     "lat": 40.19198091470839,
     "lon": 127.3379805653744,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "GU",
@@ -2888,8 +2840,8 @@
     "affiliation_iso_2": "US",
     "lat": 13.445430479945276,
     "lon": 144.78024458298802,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "JP",
@@ -2900,8 +2852,8 @@
     "affiliation_iso_2": "JP",
     "lat": 36.76738832597829,
     "lon": 137.46934234351835,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "AS",
+    "continent_name": "Asia"
   },
   {
     "iso_2": "MH",
@@ -2912,8 +2864,8 @@
     "affiliation_iso_2": "MH",
     "lat": 7.307929900994344,
     "lon": 168.72016025351076,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "FM",
@@ -2924,8 +2876,8 @@
     "affiliation_iso_2": "FM",
     "lat": 6.878944812925544,
     "lon": 158.2291899444527,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "MP",
@@ -2936,8 +2888,8 @@
     "affiliation_iso_2": "US",
     "lat": 15.178063516432116,
     "lon": 145.74119737203134,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "PW",
@@ -2948,8 +2900,8 @@
     "affiliation_iso_2": "PW",
     "lat": 7.534775852547396,
     "lon": 134.57965086721052,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "OC",
+    "continent_name": "Oceania"
   },
   {
     "iso_2": "RU",
@@ -2960,8 +2912,8 @@
     "affiliation_iso_2": "RU",
     "lat": 59.039434214106194,
     "lon": 98.6704990698032,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   },
   {
     "iso_2": "ES",
@@ -2972,19 +2924,7 @@
     "affiliation_iso_2": "ES",
     "lat": 40.36500833668384,
     "lon": -3.6516251409956975,
-    "continent_code": "",
-    "continent_name": ""
-  },
-  {
-    "iso_2": "ES",
-    "iso_3": "ESP",
-    "numeric": "724",
-    "name": "Canarias",
-    "affiliation": "Spain",
-    "affiliation_iso_2": "ES",
-    "lat": 28.297665106525542,
-    "lon": -16.53799441021647,
-    "continent_code": "",
-    "continent_name": ""
+    "continent_code": "EU",
+    "continent_name": "Europe"
   }
 ]

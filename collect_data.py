@@ -1,50 +1,133 @@
 import time
 import polars as pl
 from world_trade import WorldTrade
-from model import SessionLocal, Country
+from model import SessionLocal, Country, Product, Trade
 from rich import print  
-import pycountry    
-import pycountry_convert as pc
+import pandas as pd
+
 
 w = WorldTrade()
 session = SessionLocal()
 
-# Countries 
-# -------------------------------------------------------------------------
-for i in w.countries.iter_rows(named=True):
-    c = Country()
-
-    c.iso3 = i['id']
-    c.name = i['name']
-
-    if c.iso3 in ['999']: 
-        continue
-    else:
-        print(c.iso3, c.name)
+# # Countries 
+# # -------------------------------------------------------------------------
+# country_codes = [x.iso_2 for x in session.query(Country).all()]
+# for i in pd.read_json('./data/countries_by_iso3.json').itertuples():
+#     if i.iso_2 in country_codes:
+#         continue
+#     else:
+#         country = session.query(Country).filter(Country.iso_2 == i.iso_2).first()
+#         if not country:
+#             country = Country()
         
-        country = pycountry.countries.get(alpha_3=c.iso3)
-        if country:
-            c.iso2 = country.alpha_2 if country else None
-            
-            continent_code = pc.country_alpha2_to_continent_code(country.alpha_2)
-            if continent_code:
-                continent_name = pc.convert_continent_code_to_continent_name(continent_code)  # Fixed!
-                c.region = continent_name
-            
+#         country.iso_2 = i.iso_2
+#         country.iso_3 = i.iso_3
+#         country.numeric = i.numeric
+#         country.name = i.name
+#         country.affiliation = i.affiliation
+#         country.affiliation_iso_2 = i.affiliation_iso_2
+#         country.lat = i.lat
+#         country.lon = i.lon
+#         country.continent_code = i.continent_code
+#         country.continent_name = i.continent_name
+
+#         print(country.iso_2, country.name, country.continent_code, country.continent_name)
+
+#         try:
+#             session.add(country)
+#             session.commit()  
+#             print('updated country')
+#         except Exception as e:
+#             print(f'error {e}')
+#             break
+
+
+# # Products 
+# # -------------------------------------------------------------------------
+# product_codes = [x.id for x in session.query(Product).all()]
+# for i in w.products.to_pandas().itertuples():
+#     if i.id == '999999' or i.id in product_codes:
+#         continue
+#     else:
+#         product = session.query(Product).filter(Product.id == i.id).first()
+#         if not product:
+#             product = Product()
+        
+#         product.id = i.id
+#         product.name = i.name
+
+#         print(product.id, product.name)
+
+#         try:
+#             session.add(product)
+#             session.commit()  
+#             print('updated product')
+#         except Exception as e:
+#             print(f'error {e}')
+#             break
 
 
 
-# save(w.countries, "countries", engine)
-# save(w.products, "products", engine)
 
-# # ── 3. Trade data ─────────────────────────────────────────────────── #
-# # Drop the trade table so we start fresh on each run.
-# with engine.connect() as conn:
-#     # conn.execute(text("DROP TABLE IF EXISTS trade"))
-#     # conn.commit()
-#     w = WorldTrade()
-#     countries_df = w.countries
-#     countries = w.countries.filter(pl.col("id") != "999")["id"].to_list()
+
+
+# Trade 
+# -------------------------------------------------------------------------
+countries = session.query(Country).filter(Country.iso_2.in_(['ES', 'SA', 'AE'])).limit(5).all()
+products = session.query(Product).all()
+trades = [f"{x.product_id}>{x.reporter}>{x.partner}" for x in session.query(Trade).all()]
+
+for product in products:
+    for reporter in countries:
+        for partner in countries:
+            slug = f'{product.id}>{reporter.iso_3}>{partner.iso_3}'
+            print('slug> ', slug)
+
+            if reporter.iso_3 == partner.iso_3:
+                print(f'ignoring > {slug}')
+                continue
+            else:
+                check = (
+                    session.query(Trade)
+                    .filter(Trade.product_id == product.id)
+                    .filter(Trade.reporter == reporter.iso_3)
+                    .filter(Trade.partner == partner.iso_3)
+                    .first()
+                )
+                if check:
+                    print(f'trade exists > {slug}')
+                else: 
+                    trade = Trade()
+
+                    w.product, w.exporting, w.importing = product.id, reporter.iso_3, partner.iso_3
+                    df = w.query()
+                    for x in df.to_pandas().itertuples():
+                        print(x)
+
+                        trade = (
+                            session.query(Trade)
+                            .filter(Trade.product_id == product.id)
+                            .filter(Trade.reporter == reporter.iso_3)
+                            .filter(Trade.partner == partner.iso_3)
+                            .filter(Trade.year == x.period)
+                            .first()
+                        )
+                        if not trade:
+                            trade = Trade()
+
+                        trade.product_id = product.id
+                        trade.reporter = reporter.iso_3
+                        trade.partner = partner.iso_3
+                        trade.year = x.period
+                        trade.value = x.value
+
+                        session.add(trade)
+                    session.commit()
+
+
+
+
+
 
 #     gcc_iso3_codes = ['ARE', 'SGP']
 
@@ -53,7 +136,7 @@ for i in w.countries.iter_rows(named=True):
 #             if x == y:
 #                 continue
 
-#             w.exporting, w.importing = x, y
+#             
 
 #             df = w.query()
 #             if df.is_empty():

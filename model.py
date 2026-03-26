@@ -13,30 +13,34 @@ SessionLocal = sessionmaker(bind=engine)
 # ── 1. SQLAlchemy ORM Objects (3 Tables) ─────────────────────────────────── #
 class Country(Base):
     __tablename__ = "countries"
-    iso3 = Column(String(3), primary_key=True)
-    iso2 = Column(String(2))
+    iso_3 = Column(String(3), primary_key=True)
+    iso_2 = Column(String(2))
+    numeric= Column(Integer)
     name = Column(String, nullable=False)
-    region = Column(String)
+
+    affiliation = Column(String)
+    affiliation_iso_2 = Column(String)
+
     lat = Column(Float)
     lon = Column(Float)
-    population = Column(Integer)
-    
+
+    continent_code = Column(String)
+    continent_name = Column(String)
     # Now back_populates refers to relationships (not columns)
     trades_as_reporter = relationship("Trade", foreign_keys="Trade.reporter", back_populates="reporter_country")
     trades_as_partner = relationship("Trade", foreign_keys="Trade.partner", back_populates="partner_country")
 
 class Product(Base):
     __tablename__ = "products"
-    code = Column(String, primary_key=True,)
+    id = Column(String, primary_key=True,)
     name = Column(String)
-    description = Column(String)
 
 class Trade(Base):
     __tablename__ = "trade"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    reporter = Column(String, ForeignKey("countries.iso3"), nullable=False)
-    partner = Column(String, ForeignKey("countries.iso3"), nullable=False)
-    product_id = Column(String, ForeignKey("products.code"), nullable=False)
+    product_id = Column(String, ForeignKey("products.id"), nullable=False)
+    reporter = Column(String, ForeignKey("countries.iso_3"), nullable=False)
+    partner = Column(String, ForeignKey("countries.iso_3"), nullable=False)
     year = Column(Integer, nullable=False)
     value = Column(Float)
 
@@ -45,5 +49,5 @@ class Trade(Base):
     partner_country = relationship("Country", foreign_keys=[partner], back_populates="trades_as_partner")
     product = relationship("Product")
 
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)

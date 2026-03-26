@@ -24,7 +24,7 @@ for i in df.itertuples():
 
     try:
         continent_code = pc.country_alpha2_to_continent_code(country.alpha_2)
-        continent_name = pc.CONTINENT_CODES[continent_code]
+        continent_name = pc.convert_continent_code_to_continent_name(continent_code)
     except:
         continent_code = ''
         continent_name =''
