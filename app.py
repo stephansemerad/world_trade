@@ -7,6 +7,7 @@ import plotly.express as px
 import pydeck as pdk
 from model import SessionLocal, Country, Product, Trade
 from sqlalchemy.orm import aliased
+from utils import cytoscape_stylesheet, cytoscape_convert_to_nodes_and_edges
 
 session = SessionLocal()
 
@@ -37,7 +38,7 @@ def load_products():
     return df
 
 @st.cache_data
-def load_trades(product_selection=None, country_selection=None, year=None):
+def load_trades(product_selection=None, country_selection=[], year=None):
     reporter_country = aliased(Country)
     partner_country = aliased(Country)
     query = (
@@ -56,7 +57,7 @@ def load_trades(product_selection=None, country_selection=None, year=None):
         
     )
     if product_selection: query = query.filter(Trade.product_id == product_selection)
-    if country_selection: query = query.filter(Trade.reporter == country_selection)
+    if country_selection: query = query.filter(Trade.reporter.in_(country_selection))
     if year: query = query.filter(Trade.year == year)
 
     query = query.order_by(Trade.value.desc())
@@ -69,7 +70,7 @@ def load_trades(product_selection=None, country_selection=None, year=None):
 products = load_products()
 countries = load_countries()
 
-col1, col2, col3 = st.columns([1, 1, 2])
+col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
 with col1:
     fuels_id = products[products["name"].str.contains("Fuels", case=False, na=False)]["id"].iloc[0]
@@ -77,18 +78,23 @@ with col1:
     product_selection = st.selectbox(
         "Product:", 
         products["id"].unique().tolist(),
-        index=products["id"].unique().tolist().index(fuels_id)
+        index=products["id"].unique().tolist().index('Fuels')
     )
+
 with col2:
     country_options = [(name, iso3) for name, iso3 in zip(countries['name'], countries['iso_3'])]
-    country_selection = st.selectbox("Country:", [name for name, _ in country_options])
-    country_selection = next((iso3 for name, iso3 in country_options if name == country_selection), None)
 
+    # Multi-select on country names
+    country_selected_names = st.multiselect(
+        "Country:",
+        options=[name for name, _ in country_options]
+    )
+
+    # Convert selected names to iso3 list
+    country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
 
 trades = load_trades(product_selection, country_selection)
 trades_timeseries = trades
-
-
 
 
 with col3:
@@ -97,15 +103,27 @@ with col3:
     year_selection = st.selectbox("Year:", year_options)
     trades = trades[trades["year"] == year_selection ]
 
-trades['value'] = round(trades['value'] / 1000, 2)
-trades['weight'] = round((trades['value'] / trades['value'].sum()), 4) * 100
+with col4:
+    weight_selection = st.selectbox("Weight", ['Country', 'Global'])
+    if weight_selection == 'Global':
+        trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
+
+    if weight_selection == 'Country':
+        trades['weight'] = (
+            trades['value']
+            .div(trades.groupby('reporter')['value'].transform('sum'))
+            .mul(100)
+            .round(2)
+        )
+
+trades['value'] = round(trades['value'] / 1000000, 2)
 
 
-st.caption(f'{product_selection} / {country_selection} / {year_selection}')
+st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_selection}')
 
 # Layout
 # ---------------------------------------------------------------------------
-tab1, tab2 = st.tabs(["🌐 World Trade Map", "🔢 Raw Data"])
+tab1, tab2, tabx = st.tabs(["🌐 World Trade Map", "Graph", "🔢 Raw Data"])
 
 if trades.empty:
     st.warning(f"No trade data.")
@@ -137,7 +155,7 @@ with tab1:
         latitude=center_lat,
         longitude=center_lng,
         zoom=2.5,
-        pitch=40
+        pitch=25
     )
 
     # Tooltip with country names and value
@@ -148,9 +166,8 @@ with tab1:
         tooltip={
             "html": """
             <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
-            Trade Value: ${value}B
-            Trade Weight: ${weight}B
-
+            Trade Value: ${value}B<br/>
+            Trade Weight: ${weight}%
             """,
             "style": {"backgroundColor": "steelblue", "color": "white"}
         }
@@ -158,8 +175,28 @@ with tab1:
 
     st.pydeck_chart(deck, width='stretch', height=600)
 
-
 with tab2:
+    # Cytoscape
+    # ----------------------------------------------------------------------
+    # Render the graph — layout IS supported here
+    # breadthfirst, circle, grid, cose, random
+    st.write("**Cytoscape Network Trade Map**")
+    options = ["cose", "breadthfirst", "circle", "grid", "random"]
+    layout = st.selectbox("Layout:", options)
+
+    cytoscape(
+        cytoscape_convert_to_nodes_and_edges(trades),
+        cytoscape_stylesheet,
+        height="500px",
+        layout={
+            "name": layout,
+            "nodeRepulsion": 500000,
+        },
+        key="cytoscape",
+    )
+
+
+with tabx:
     tables = {
         'Trades': trades,
         'Product': products,
@@ -202,139 +239,6 @@ with tab2:
 #     ]
 
 
-
-# # Cytoscape
-# # ----------------------------------------------------------------------
-
-# trade_data = trade_df.to_dict("records")
-
-
-# nodes = []
-# edges = []
-
-# partners = trade_df[["partner", "partner_name"]].copy()
-# partners.columns = ["id", "name"]
-
-# reporters = trade_df[["reporter", "reporter_name"]].copy()
-# reporters.columns = ["id", "name"]
-
-# country_df = pd.concat([partners, reporters], ignore_index=True)
-# country_df = country_df.drop_duplicates()
-
-# country_data = country_df.to_dict("records")
-# country_list = [x["id"] for x in country_data]
-
-# for x in country_data:
-    
-#     row = {
-#         "data": {
-#             "id": x["id"],
-#             "label": x["name"] + f' ({x["id"]})',
-#             "size": 20,  # Add size to node data
-#         }
-#     }
-#     if row not in nodes:
-#         nodes.append(row)
-
-# for y in trade_data:
-#     if y["reporter"] == y["partner"]:
-#         continue
-
-#     if y["reporter"] not in country_list:
-#         continue
-
-#     if y["partner"] not in country_list:
-#         continue
-
-#     edge_width = int(y["value"])
-#     if edge_width > 1000:
-#         edge_width = 10
-
-#     row =         {
-#             "data": {
-#                 "id": f"{y['reporter']}-{y['partner']}",
-#                 "source": y["reporter"],
-#                 "target": y["partner"],
-#                 "value": f"{y['weight']/100:.2%}",
-#                 "width": y["weight"] / 10,  # Add width to edge data
-#             }
-#         }
-
-#     if row not in edges:
-#         edges.append(row)
-
-# elements = nodes + edges
-
-# # Updated stylesheet using data values
-# stylesheet = [
-#     {
-#         "selector": "node",
-#         "style": {
-#             "label": "data(label)",
-#             "background-color": "#4A90E2",
-#             "color": "#fff",
-#             "text-valign": "center",
-#             "text-halign": "center",
-#             "font-size": "14px",
-#             "width": "data(size)",
-#             "height": "data(size)",
-#         },
-#     },
-#     {
-#         "selector": "edge",
-#         "style": {
-#             "curve-style": "bezier",
-#             "target-arrow-shape": "triangle",
-#             "line-color": "#aaa",
-#             "target-arrow-color": "#aaa",
-#             "width": "data(width)",
-#             "label": "data(value)",      # 👈 SHOW VALUE ON EDGE
-#             "font-size": "12px",
-#             "color": "#666",
-#             "text-rotation": "autorotate",  # Follows edge curve
-#             "text-margin-y": "-5px",       # Position above edge
-#             "text-halign": "center",
-#         },
-#     },
-#     {
-#         "selector": ":selected",
-#         "style": {
-#             "background-color": "#4A90E2",
-#             "line-color": "#2C598C",
-#             "target-arrow-color": "#135AAC",
-#             "label": "data(value)",  # Highlight selected
-#             "color": "#000",
-#             "font-weight": "bold",
-#         },
-#     },
-# ]
-
-
-
-# # Render the graph — layout IS supported here
-# # breadthfirst, circle, grid, cose, random
-
-# col1, col2 = st.columns([1, 1])
-
-
-
-# with col1:
-#     st.write("**Cytoscape Network Trade Map**")
-#     options = ["cose", "breadthfirst", "circle", "grid", "random"]
-#     layout = st.selectbox("Layout:", options)
-
-
-#     selected = cytoscape(
-#         elements,
-#         stylesheet,
-#     height="500px",
-#         layout={
-#             "name": layout,
-#             "nodeRepulsion": 500000,
-#         },
-#         key="cytoscape",
-
-#     )
 
 # with col2:
 #     st.write("**Map Projection Import Trade Value**")

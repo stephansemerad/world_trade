@@ -73,10 +73,10 @@ session = SessionLocal()
 
 # Trade 
 # -------------------------------------------------------------------------
-countries_reporter = session.query(Country).filter(Country.iso_2.in_(['ES', 'AE'])).all()
+countries_reporter = session.query(Country).all()
 countries_partner = session.query(Country).all()
 
-products = session.query(Product).all()
+products = session.query(Product).filter(Product.id == 'Fuels').all()
 trades = [f"{x.product_id}>{x.reporter}>{x.partner}" for x in session.query(Trade).all()]
 
 for product in products:
