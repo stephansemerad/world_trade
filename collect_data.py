@@ -110,8 +110,6 @@ for product in products:
                     df = w.query()
 
                     for x in df.to_pandas().itertuples():
-                        print(x)
-
                         trade = (
                             session.query(Trade)
                             .filter(Trade.product_id == product.id)
@@ -129,7 +127,8 @@ for product in products:
                         trade.year = x.period
                         trade.value = x.value
 
-                    session.add(trade)
+                        session.add(trade)
+                        session.commit()
                     
                     print('slug', slug)
                     print('df> ', df.is_empty())

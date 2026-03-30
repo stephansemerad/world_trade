@@ -5,7 +5,7 @@ import altair as alt
 import numpy as np
 import plotly.express as px
 import pydeck as pdk
-from model import SessionLocal, Country, Product, Trade
+from model import SessionLocal, Country, Product, Trade, API_status
 from sqlalchemy.orm import aliased
 from utils import cytoscape_stylesheet, cytoscape_convert_to_nodes_and_edges
 
@@ -15,6 +15,12 @@ st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide"
 st.title("🌐 World Trade Map")
 st.write("A simple interactive graph example.")
 
+
+@st.cache_data
+def load_api_status():
+    query = session.query(API_status)
+    df = pd.read_sql_query(query.statement, session.bind)
+    return df
 
 @st.cache_data
 def load_countries():
@@ -69,6 +75,7 @@ def load_trades(product_selection=None, country_selection=[], year=None):
 # ---------------------------------------------------------------------------
 products = load_products()
 countries = load_countries()
+api_status = load_api_status()
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
@@ -201,6 +208,8 @@ with tabx:
         'Trades': trades,
         'Product': products,
         'Countries': countries,
+        'API Status': api_status,
+
     }
     for table in tables:
         st.text(f'{table} | records ({len(tables[table])})')
