@@ -1,6 +1,6 @@
 import time
 from world_trade import WorldTrade
-from sqlalchemy import create_engine, Column, String, Integer, Float, ForeignKey, text
+from sqlalchemy import create_engine, Column, String, Integer, Float, ForeignKey, DateTime  
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import polars as pl
@@ -48,6 +48,15 @@ class Trade(Base):
     reporter_country = relationship("Country", foreign_keys=[reporter], back_populates="trades_as_reporter")
     partner_country = relationship("Country", foreign_keys=[partner], back_populates="trades_as_partner")
     product = relationship("Product")
+
+
+class API_status(Base):
+    __tablename__ = "api_status"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    slug = Column(String, nullable=False)
+    status = Column(String, nullable=False)
+    retrieved_at = Column(DateTime, nullable=False)
+
 
 # Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)

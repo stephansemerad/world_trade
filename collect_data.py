@@ -1,9 +1,10 @@
 import time
 import polars as pl
 from world_trade import WorldTrade
-from model import SessionLocal, Country, Product, Trade
+from model import SessionLocal, Country, Product, Trade, API_status
 from rich import print  
 import pandas as pd
+from datetime import datetime
 
 
 w = WorldTrade()
@@ -82,8 +83,12 @@ trades = [f"{x.product_id}>{x.reporter}>{x.partner}" for x in session.query(Trad
 for product in products:
     for reporter in countries_reporter:
         for partner in countries_partner:
-            slug = f'{product.id}>{reporter.iso_3}>{partner.iso_3}'
-            print('slug> ', slug)
+            slug = f'{product.id}-{reporter.iso_3}-{partner.iso_3}'.lower()
+            
+            api_check = session.query(API_status).filter(API_status.slug == slug).first()
+            if api_check:
+                print('skipping > ', slug, ' > already exists in API_status')
+                continue
 
             if reporter.iso_3 == partner.iso_3:
                 print(f'ignoring > {slug}')
@@ -103,6 +108,7 @@ for product in products:
 
                     w.product, w.exporting, w.importing = product.id, reporter.iso_3, partner.iso_3
                     df = w.query()
+
                     for x in df.to_pandas().itertuples():
                         print(x)
 
@@ -123,8 +129,24 @@ for product in products:
                         trade.year = x.period
                         trade.value = x.value
 
-                        session.add(trade)
-                    session.commit()
+                    session.add(trade)
+                    
+                    print('slug', slug)
+                    print('df> ', df.is_empty())
+
+                    api_status = session.query(API_status).filter(API_status.slug == slug).first()
+                    if not api_status:
+
+                        api_status = API_status()
+                        api_status.slug = slug
+                        api_status.status = 'success' if not df.is_empty() else 'failed'
+                        api_status.retrieved_at = datetime.now()
+                        session.add(api_status)
+                        session.commit()
+
+                    
+                    
+                    
 
 
 
