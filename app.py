@@ -59,7 +59,7 @@ def load_trades(product_selection=None, country_selection=[], year=None):
             partner_country.lon.label("partner_lng"),
         )
         .join(reporter_country, reporter_country.iso_3 == Trade.reporter)
-        .outerjoin(partner_country, partner_country.iso_3 == Trade.partner)
+        .join(partner_country, partner_country.iso_3 == Trade.partner)
         
     )
     if product_selection: query = query.filter(Trade.product_id == product_selection)
@@ -111,7 +111,7 @@ with col3:
     trades = trades[trades["year"] == year_selection ]
 
 with col4:
-    weight_selection = st.selectbox("Weight", ['Country', 'Global'])
+    weight_selection = st.selectbox("Weight", ['Global', 'Country'])
     if weight_selection == 'Global':
         trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
 
