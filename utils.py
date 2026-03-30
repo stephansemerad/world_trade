@@ -23,11 +23,11 @@ cytoscape_stylesheet = [
             "line-color": "#aaa",
             "target-arrow-color": "#aaa",
             "width": "data(width)",
-            "label": "data(value)",      # 👈 SHOW VALUE ON EDGE
+            "label": "data(value)",
             "font-size": "12px",
             "color": "#666",
-            "text-rotation": "autorotate",  # Follows edge curve
-            "text-margin-y": "-5px",       # Position above edge
+            "text-rotation": "autorotate",
+            "text-margin-y": "-5px",
             "text-halign": "center",
         },
     },
@@ -37,7 +37,7 @@ cytoscape_stylesheet = [
             "background-color": "#4A90E2",
             "line-color": "#2C598C",
             "target-arrow-color": "#135AAC",
-            "label": "data(value)",  # Highlight selected
+            "label": "data(value)",
             "color": "#000",
             "font-weight": "bold",
         },
@@ -51,6 +51,7 @@ def cytoscape_convert_to_nodes_and_edges(trades):
 
 
     trades =  trades.drop_duplicates()
+    trades = trades[trades['weight'] > 0]
 
     reporters = trades[["reporter", "reporter_name"]].copy()
     partners = trades[["partner", "partner_name"]].copy()
@@ -62,6 +63,7 @@ def cytoscape_convert_to_nodes_and_edges(trades):
 
     country_data = country_df
     country_list = [x["id"] for x in country_data]
+
 
 
     for x in country_data:

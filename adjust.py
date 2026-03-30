@@ -1,19 +1,12 @@
-from model import Product, Trade, SessionLocal, API_status, Country
-import pypopulation
+from model import Product, Trade, SessionLocal, API_status, Country, Product
+from sqlalchemy import text
+from sqlalchemy.orm import aliased
+from rich import print
+reporter_country = aliased(Country)
+partner_country = aliased(Country)
 
 session = SessionLocal()
 
-countries = (
-    session.query(Country)
-    .filter(Country.population > 50_000_000)
-    .order_by(Country.population.desc())
-
-
-
-    .all()
-)
-
-for country in countries:
-   print(country.name, round(country.population / 1_000_000))
-
-print(len(countries))
+products = session.query(Product).all()
+for product in products:
+    print(f'checking > {product.id} - {product.name}')

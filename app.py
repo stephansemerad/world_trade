@@ -15,36 +15,29 @@ st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide"
 st.title("🌐 World Trade Map")
 st.write("A simple interactive graph example.")
 
-
-@st.cache_data
-def load_api_status():
-    query = session.query(API_status)
-    df = pd.read_sql_query(query.statement, session.bind)
-    return df
-
-@st.cache_data
+# @st.cache_data
 def load_countries():
-    trade_partners_subq = session.query(Trade.partner.distinct()).subquery()
-
+    trade_reported_subquery = session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
     query = (
         session.query(Country)
-        .filter(Country.iso_3.in_(trade_partners_subq))
+        .filter(Country.iso_3.in_(trade_reported_subquery))
         .order_by(Country.name.desc())
     )
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
-@st.cache_data
 def load_products():
     query = (
         session.query(Product)
+        .filter(Product.id.in_(session.query(Trade.product_id.distinct())))
         .order_by(Product.id.desc())
     )
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
-@st.cache_data
-def load_trades(product_selection=None, country_selection=[], year=None):
+
+
+def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',  country_selection=[], year=None):
     reporter_country = aliased(Country)
     partner_country = aliased(Country)
     query = (
@@ -65,10 +58,18 @@ def load_trades(product_selection=None, country_selection=[], year=None):
         .filter(Trade.reporter != "") # Exclude records with empty reporter
         .filter(Trade.partner != "") # Exclude records with empty partner
     )
-    
-    if product_selection: query = query.filter(Trade.product_id == product_selection)
-    if country_selection: query = query.filter(Trade.reporter.in_(country_selection))
-    if year: query = query.filter(Trade.year == year)
+
+    if product_selection: 
+        query = query.filter(Trade.product_id == product_selection)
+
+    if mode_of_transport_selection: 
+        query = query.filter(Trade.mode_of_transport == mode_of_transport_selection)
+
+    if country_selection: 
+        query = query.filter(Trade.reporter.in_(country_selection))
+
+    if year: 
+        query = query.filter(Trade.year == year)
 
     query = query.order_by(Trade.value.desc())
     df = pd.read_sql_query(query.statement, session.bind)
@@ -81,18 +82,15 @@ def load_trades(product_selection=None, country_selection=[], year=None):
 # ---------------------------------------------------------------------------
 products = load_products()
 countries = load_countries()
-api_status = load_api_status()
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
 with col1:
-    fuels_id = products[products["name"].str.contains("Fuels", case=False, na=False)]["id"].iloc[0]
-
     product_selection = st.selectbox(
         "Product:", 
         products["id"].unique().tolist(),
-        index=products["id"].unique().tolist().index('Fuels')
     )
+
 
 with col2:
     country_options = [(name, iso3) for name, iso3 in zip(countries['name'], countries['iso_3'])]
@@ -106,9 +104,11 @@ with col2:
     # Convert selected names to iso3 list
     country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
 
-trades = load_trades(product_selection, country_selection)
-trades_timeseries = trades
+mode_of_transport_selection = 'TOTAL MOT'
 
+trades = load_trades(product_selection, mode_of_transport_selection, country_selection)
+
+trades_timeseries = trades
 
 with col3:
     year_options = trades["year"].unique()
@@ -116,10 +116,16 @@ with col3:
     year_selection = st.selectbox("Year:", year_options)
     trades = trades[trades["year"] == year_selection ]
 
+
+
 with col4:
     weight_selection = st.selectbox("Weight", ['Global', 'Country'])
     if weight_selection == 'Global':
-        trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
+        try:
+            trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
+        except Exception as e:
+            print(e)
+            trades['weight'] = 0
 
     if weight_selection == 'Country':
         trades['weight'] = (
@@ -128,8 +134,6 @@ with col4:
             .mul(100)
             .round(2)
         )
-
-trades['value'] = round(trades['value'] / 1000000, 2)
 
 
 st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_selection}')
@@ -251,8 +255,6 @@ with tabx:
         'Trades': trades,
         'Product': products,
         'Countries': countries,
-        'API Status': api_status,
-
     }
     for table in tables:
         st.text(f'{table} | records ({len(tables[table])})')
