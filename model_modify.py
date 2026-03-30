@@ -4,5 +4,4 @@ from model import engine
 # Example: add a new column to the existing SQLite table
 with engine.connect() as conn:
     conn.execute(text("ALTER TABLE countries ADD COLUMN population INTEGER"))
-    conn.execute(text("ALTER TABLE countries ADD COLUMN is_eu Boolean"))
     conn.commit()

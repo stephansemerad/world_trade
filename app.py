@@ -60,8 +60,12 @@ def load_trades(product_selection=None, country_selection=[], year=None):
         )
         .join(reporter_country, reporter_country.iso_3 == Trade.reporter)
         .join(partner_country, partner_country.iso_3 == Trade.partner)
-        
+        .filter(Trade.value != None)  # Exclude records with null value
+        .filter(Trade.value > 0)  # Exclude records with zero or negative value
+        .filter(Trade.reporter != "") # Exclude records with empty reporter
+        .filter(Trade.partner != "") # Exclude records with empty partner
     )
+    
     if product_selection: query = query.filter(Trade.product_id == product_selection)
     if country_selection: query = query.filter(Trade.reporter.in_(country_selection))
     if year: query = query.filter(Trade.year == year)
@@ -69,6 +73,8 @@ def load_trades(product_selection=None, country_selection=[], year=None):
     query = query.order_by(Trade.value.desc())
     df = pd.read_sql_query(query.statement, session.bind)
     return df
+
+
 
 
 # Filters
@@ -130,7 +136,7 @@ st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_s
 
 # Layout
 # ---------------------------------------------------------------------------
-tab1, tab2, tabx = st.tabs(["🌐 World Trade Map", "Graph", "🔢 Raw Data"])
+tab1, tab2, tab3, tabx = st.tabs(["🌐 World Trade Map", "Graph", "Exporters / Importers", "🔢 Raw Data"])
 
 if trades.empty:
     st.warning(f"No trade data.")
@@ -201,6 +207,43 @@ with tab2:
         },
         key="cytoscape",
     )
+
+
+with tab3:
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.write("**Top Exporters**")
+        # Export flows: what reporter sends to which partners
+        exports = (
+            trades.
+            groupby(["product_id", "year", "reporter", "reporter_name"])
+            .agg({"value": "sum", "weight": "sum"})
+            .reset_index()
+            .sort_values("value", ascending=False)
+            .head(10)
+        )
+        exports["trade_type"] = "export"
+
+        st.dataframe(exports, width='stretch')
+
+    with col2:
+        st.write("**Top Importers**")
+        # Import flows: what partner receives from which reporters
+        imports = (
+            trades.
+            groupby(["product_id", "year", "partner", "partner_name"])
+            .agg({"value": "sum", "weight": "sum"})
+            .reset_index()
+            .sort_values("value", ascending=False)
+            .head(10)
+        )
+        imports["trade_type"] = "import"
+        st.dataframe(imports, width='stretch')
+
+
+
+
+
 
 
 with tabx:
