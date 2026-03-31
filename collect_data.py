@@ -20,14 +20,25 @@ countries_name = {
     .all()
 }
 
-countries_reporter =  countries_partner = (
+countries_reporter = (
     session.query(Country)
     .filter(Country.affiliation_iso_2 == Country.iso_2)
     .filter(Country.un_code != None)
-    .filter(Country.population > 10_000_000)
+    .filter(Country.population > 100_000_000)
+    .filter(Country.continent_name == 'Middle-East')
     .order_by(Country.population.desc())
     .all()
 )
+
+countries_partner = (
+    session.query(Country)
+    .filter(Country.affiliation_iso_2 == Country.iso_2)
+    .filter(Country.un_code != None)
+    .filter(Country.population > 100_000_000)
+    .order_by(Country.population.desc())
+    .all()
+)
+
 total = 0
 for reporter in countries_reporter:
     for partner in countries_partner:

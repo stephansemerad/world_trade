@@ -7,6 +7,9 @@ partner_country = aliased(Country)
 
 session = SessionLocal()
 
-products = session.query(Product).all()
-for product in products:
+
+
+countries = session.query(Country).all()
+for product in countries:
     print(f'checking > {product.id} - {product.name}')
+

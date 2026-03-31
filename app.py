@@ -151,13 +151,18 @@ st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_s
 
 # Layout
 # ---------------------------------------------------------------------------
-tab1, tab2, tab3, tabx = st.tabs(["🌐 World Trade Map", "Graph", "Exporters / Importers", "🔢 Raw Data"])
+
+tab1, tab2, tab3, tabx = st.tabs(
+    ["🌐 World Trade Map", "Graph", "Exporters / Importers", "🔢 Raw Data"],  on_change="rerun"
+)
 
 if trades.empty:
     st.warning(f"No trade data.")
     st.stop()
 
 with tab1:
+
+
     trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
     trade_data['width'] = trade_data['weight'] / 8
 
@@ -202,6 +207,14 @@ with tab1:
     )
 
     st.pydeck_chart(deck, width='stretch', height=600)
+
+    st.dataframe(trades)
+
+
+
+
+
+
 
 with tab2:
 
@@ -295,11 +308,10 @@ with tab3:
 
         st.altair_chart(chart, width='stretch')
 
-        exports['value'] = exports['value'].map('${:,.2f}'.format)
-        exports['weight'] = exports['weight'].map('{:,.2f}'.format)
-        exports["trade_type"] = "export"
-
-        st.dataframe(exports, width='stretch')
+        # exports['value'] = exports['value'].map('${:,.2f}'.format)
+        # exports['weight'] = exports['weight'].map('{:,.2f}'.format)
+        # exports["trade_type"] = "export"
+        # st.dataframe(exports, width='stretch')
 
     with col2:
         st.write("**Top Importers**")
@@ -335,17 +347,10 @@ with tab3:
 
         st.altair_chart(chart, width='stretch')
 
-
-        imports['value'] = imports['value'].map('${:,.2f}'.format)
-        imports['weight'] = imports['weight'].map('{:,.2f}'.format)
-        imports["trade_type"] = "import"
-        st.dataframe(imports, width='stretch')
-
-        
-
-
-
-
+        # imports['value'] = imports['value'].map('${:,.2f}'.format)
+        # imports['weight'] = imports['weight'].map('{:,.2f}'.format)
+        # imports["trade_type"] = "import"
+        # st.dataframe(imports, width='stretch')
 
 with tabx:
     tables = {
@@ -367,27 +372,6 @@ with tabx:
 
 
 # with col2:
-#     st.write("**Map Projection Import Trade Value**")
-
-#     graph_data = trades
-#     graph_data = graph_data[['partner', 'partner_name', 'value']]
-
-#     options = [ 'orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
-#     layout = st.selectbox("Projection", options)
-
-
-#     fig = px.choropleth(
-#         graph_data,
-#         locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
-#         color='value',       # Color intensity by trade volume
-#         hover_name='partner_name',
-#         color_continuous_scale='Blues',
-#         projection=layout,  # World map projection
-#         labels={'trade_value': 'Trade Volume'}
-#     )
-#     fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
-#     st.plotly_chart(fig, width='stretch')
-
 
 
 # col1, col2 = st.columns([1, 1])
