@@ -162,51 +162,77 @@ if trades.empty:
 
 with tab1:
 
+    col1, col2 = st.columns([2, 1])
 
-    trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
-    trade_data['width'] = trade_data['weight'] / 8
+    with col1:
+        trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
+        trade_data['width'] = trade_data['weight'] / 8
 
-    arc_layer = pdk.Layer(
-        'ArcLayer',
-        trade_data,
-        get_source_position=['reporter_lng', 'reporter_lat'],
-        get_target_position=['partner_lng', 'partner_lat'],
-        get_width="width",
-        get_height=0.2,
-        get_tilt_slant=1,
-        get_source_color=[100, 150, 255, 160],  # Blue start
-        get_target_color=[50, 100, 255, 180],   # Blue end
-        pickable=True
-    )
+        arc_layer = pdk.Layer(
+            'ArcLayer',
+            trade_data,
+            get_source_position=['reporter_lng', 'reporter_lat'],
+            get_target_position=['partner_lng', 'partner_lat'],
+            get_width="width",
+            get_height=0.2,
+            get_tilt_slant=1,
+            get_source_color=[100, 150, 255, 160],  # Blue start
+            get_target_color=[50, 100, 255, 180],   # Blue end
+            pickable=True
+        )
 
-    unique_coords = trades[['reporter_lat', 'reporter_lng']].drop_duplicates()
+        unique_coords = trades[['reporter_lat', 'reporter_lng']].drop_duplicates()
 
-    center_lat = unique_coords['reporter_lat'].mean()
-    center_lng = unique_coords['reporter_lng'].mean()
+        center_lat = unique_coords['reporter_lat'].mean()
+        center_lng = unique_coords['reporter_lng'].mean()
 
-    view = pdk.ViewState(
-        latitude=center_lat,
-        longitude=center_lng,
-        zoom=2.5,
-        pitch=25
-    )
+        view = pdk.ViewState(
+            latitude=center_lat,
+            longitude=center_lng,
+            zoom=2.5,
+            pitch=25
+        )
 
-    # Tooltip with country names and value
-    deck = pdk.Deck(
-        layers=[arc_layer],
-        initial_view_state=view,
-        map_style=None,
-        tooltip={
-            "html": """
-            <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
-            Trade Value: ${value}B<br/>
-            Trade Weight: ${weight}%
-            """,
-            "style": {"backgroundColor": "steelblue", "color": "white"}
-        }
-    )
+        # Tooltip with country names and value
+        deck = pdk.Deck(
+            layers=[arc_layer],
+            initial_view_state=view,
+            map_style=None,
+            tooltip={
+                "html": """
+                <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
+                Trade Value: ${value}B<br/>
+                Trade Weight: ${weight}%
+                """,
+                "style": {"backgroundColor": "steelblue", "color": "white"}
+            }
+        )
 
-    st.pydeck_chart(deck, width='stretch', height=600)
+        st.pydeck_chart(deck, width='stretch', height=600)
+
+    with col2:
+
+        def make_globe():
+            graph_data = trades
+            graph_data = graph_data.groupby(['partner', 'partner_name'])['value'].sum().reset_index()
+
+            options = ['orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
+            layout = st.selectbox("Projection", options)
+
+            fig = px.choropleth(
+                graph_data,
+                locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
+                color='value',       # Color intensity by trade volume
+                hover_name='partner_name',
+                color_continuous_scale='Blues',
+                projection=layout,  # World map projection
+                labels={'value': 'Trade Volume'}
+            )
+            
+            fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
+            st.plotly_chart(fig, width='stretch')
+        
+        make_globe()
 
     st.dataframe(trades)
 
