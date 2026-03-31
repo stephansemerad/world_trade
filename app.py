@@ -136,6 +136,17 @@ with col4:
         )
 
 
+min_val = float(0)
+max_val = float(100)
+
+slider_range = st.slider(
+    "Weight Range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
+)
+min_slider, max_slider = slider_range
+trades = trades[
+    (trades["weight"] >= min_slider) & (trades["weight"] <= max_slider)
+]
+
 st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_selection}')
 
 # Layout
@@ -193,24 +204,59 @@ with tab1:
     st.pydeck_chart(deck, width='stretch', height=600)
 
 with tab2:
-    # Cytoscape
-    # ----------------------------------------------------------------------
-    # Render the graph — layout IS supported here
-    # breadthfirst, circle, grid, cose, random
-    st.write("**Cytoscape Network Trade Map**")
+
+    col1, col2 = st.columns([1, 1])
+
     options = ["cose", "breadthfirst", "circle", "grid", "random"]
     layout = st.selectbox("Layout:", options)
 
-    cytoscape(
-        cytoscape_convert_to_nodes_and_edges(trades),
-        cytoscape_stylesheet,
-        height="500px",
-        layout={
-            "name": layout,
-            "nodeRepulsion": 500000,
-        },
-        key="cytoscape",
-    )
+
+
+    with col1:
+        # Cytoscape
+        # ----------------------------------------------------------------------
+        # Render the graph — layout IS supported here
+        # breadthfirst, circle, grid, cose, random
+        st.write("**Cytoscape Network Trade Map**")
+
+        cytoscape(
+            cytoscape_convert_to_nodes_and_edges(trades),
+            cytoscape_stylesheet,
+            height="600px",
+            layout={
+                "name": layout,
+                "nodeRepulsion": 600000,
+            },
+            key="cytoscape",
+        )
+
+    with col2:
+        graph_data = trades
+
+        graph_data['trade'] = (
+            trades['reporter'] + ' > ' +  trades['partner_name']
+        )
+        graph_data = graph_data[['trade', 'value']]
+        graph_data = graph_data.sort_values('value', ascending=False).head(20)  # Top 20 for readability
+        graph_data['value_mil'] = graph_data['value'] / 1_000_000
+
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X('value_mil:Q', 
+                        title='Trade Value (Mil USD)',
+                        axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
+                y=alt.Y('trade:N', sort=None, title='Trade Flow'),
+                tooltip=[alt.Tooltip('trade:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
+            )
+            .properties(height=600, title='Top Trade Flows (in Millions)')
+        )
+
+        st.altair_chart(chart, width='stretch')
+
+    st.divider()
+
 
 
 with tab3:
@@ -222,10 +268,35 @@ with tab3:
             trades.
             groupby(["product_id", "year", "reporter", "reporter_name"])
             .agg({"value": "sum", "weight": "sum"})
-            .reset_index()
             .sort_values("value", ascending=False)
-            .head(10)
+            .reset_index()
         )
+
+        graph_data = exports
+        graph_data = (
+            graph_data[['reporter_name', 'value']]
+            .sort_values('value', ascending=False)
+            .head(20)
+        )
+        graph_data['value_mil'] = graph_data['value'] / 1_000_000
+
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X('value_mil:Q', 
+                        title='Trade Value (Mil USD)',
+                        axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
+                y=alt.Y('reporter_name:N', sort=None, title='Reporter'),
+                tooltip=[alt.Tooltip('reporter_name:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
+            )
+            .properties(height=500, title='Top Trade Flows (in Millions)')
+        )
+
+        st.altair_chart(chart, width='stretch')
+
+        exports['value'] = exports['value'].map('${:,.2f}'.format)
+        exports['weight'] = exports['weight'].map('{:,.2f}'.format)
         exports["trade_type"] = "export"
 
         st.dataframe(exports, width='stretch')
@@ -237,14 +308,40 @@ with tab3:
             trades.
             groupby(["product_id", "year", "partner", "partner_name"])
             .agg({"value": "sum", "weight": "sum"})
-            .reset_index()
             .sort_values("value", ascending=False)
-            .head(10)
+            .reset_index()
         )
+
+        graph_data = imports
+        graph_data = (
+            graph_data[['partner_name', 'value']]
+            .sort_values('value', ascending=False)
+            .head(20)
+        )
+        graph_data['value_mil'] = graph_data['value'] / 1_000_000
+
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X('value_mil:Q', 
+                        title='Trade Value (Mil USD)',
+                        axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
+                y=alt.Y('partner_name:N', sort=None, title='Partner'),
+                tooltip=[alt.Tooltip('partner_name:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
+            )
+            .properties(height=500, title='Top Trade Flows (in Millions)')
+        )
+
+        st.altair_chart(chart, width='stretch')
+
+
+        imports['value'] = imports['value'].map('${:,.2f}'.format)
+        imports['weight'] = imports['weight'].map('{:,.2f}'.format)
         imports["trade_type"] = "import"
         st.dataframe(imports, width='stretch')
 
-
+        
 
 
 
@@ -266,38 +363,13 @@ with tabx:
 
 
 
-# col1, col2 = st.columns([1, 1])
-# with col1:
-#     min_val = float(0)
-#     max_val = float(trade_df["value"].max())
-
-#     slider_range = st.slider(
-#         "Select value range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
-#     )
-#     min_slider, max_slider = slider_range
-#     trade_df = trade_df[
-#         (trade_df["value"] >= min_slider) & (trade_df["value"] <= max_slider)
-#     ]
-
-
-# with col2:
-#     min_val = float(0)
-#     max_val = float(trade_df["weight"].max())
-
-#     slider_range = st.slider(
-#         "Weight range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
-#     )
-#     min_slider, max_slider = slider_range
-#     trade_df = trade_df[
-#         (trade_df["weight"] >= min_slider) & (trade_df["weight"] <= max_slider)
-#     ]
 
 
 
 # with col2:
 #     st.write("**Map Projection Import Trade Value**")
 
-#     graph_data = trade_df
+#     graph_data = trades
 #     graph_data = graph_data[['partner', 'partner_name', 'value']]
 
 #     options = [ 'orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
@@ -313,7 +385,7 @@ with tabx:
 #         projection=layout,  # World map projection
 #         labels={'trade_value': 'Trade Volume'}
 #     )
-#     fig.update_layout(height=500, margin={"r":0,"t":40,"l":0,"b":0})
+#     fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
 #     st.plotly_chart(fig, width='stretch')
 
 
@@ -322,21 +394,21 @@ with tabx:
 
 # with col1:
 
-#     timeseries_trade_df['trade'] = (
-#         timeseries_trade_df['reporter'] + ' > ' +  timeseries_trade_df['partner_name']
+#     timeseries_trades['trade'] = (
+#         timeseries_trades['reporter'] + ' > ' +  timeseries_trades['partner_name']
 #     )
-#     timeseries_trade_df = timeseries_trade_df[['trade', 'value', 'period', 'reporter', 'partner']]
-#     timeseries_trade_df = timeseries_trade_df.dropna()
+#     timeseries_trades = timeseries_trades[['trade', 'value', 'period', 'reporter', 'partner']]
+#     timeseries_trades = timeseries_trades.dropna()
 
 
-#     countries_to_filter = trade_df['partner'].to_list()
-#     timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["partner"].isin(countries_to_filter)]
+#     countries_to_filter = trades['partner'].to_list()
+#     timeseries_trades = timeseries_trades[timeseries_trades["partner"].isin(countries_to_filter)]
 
-#     countries_to_filter = trade_df['reporter'].to_list()
-#     timeseries_trade_df = timeseries_trade_df[timeseries_trade_df["reporter"].isin(countries_to_filter)]
+#     countries_to_filter = trades['reporter'].to_list()
+#     timeseries_trades = timeseries_trades[timeseries_trades["reporter"].isin(countries_to_filter)]
 
 
-#     chart = (alt.Chart(timeseries_trade_df)
+#     chart = (alt.Chart(timeseries_trades)
 #         .mark_line(strokeWidth=3)
 #         .encode(
 #             x=alt.X('period:Q', title='Period'),
@@ -346,7 +418,7 @@ with tabx:
 #         )
 #         .properties(
 #             title='Trade Flow over time',
-#             height=500
+#             height=600
 #         )
 #         .interactive()
 #     )
@@ -358,32 +430,7 @@ with tabx:
 
 
 
-# with col2:
-#     graph_data = trade_df
 
-#     graph_data['trade'] = (
-#         trade_df['reporter'] + ' > ' +  trade_df['partner_name']
-#     )
-#     graph_data = graph_data[['trade', 'value']]
-#     graph_data = graph_data.sort_values('value', ascending=False).head(20)  # Top 20 for readability
-#     graph_data['value_mil'] = graph_data['value'] / 1_000_000
-
-#     chart = (
-#         alt.Chart(graph_data)
-#         .mark_bar(color='steelblue')
-#         .encode(
-#             x=alt.X('value_mil:Q', 
-#                     title='Trade Value (Mil USD)',
-#                     axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
-#             y=alt.Y('trade:N', sort=None, title='Trade Flow'),
-#             tooltip=[alt.Tooltip('trade:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
-#         )
-#         .properties(height=500, title='Top Trade Flows (in Millions)')
-#     )
-
-#     st.altair_chart(chart, width='stretch')
-
-# st.divider()
 
 
 # example_data = {
@@ -391,7 +438,7 @@ with tabx:
 #     'partner_name': ['USA', 'China', 'India', 'Germany', 'Japan', 'UK', 'France', 'Italy', 'South Korea', 'UAE', 'Saudi Arabia', 'Iran'],
 #     'partner_iso3': ['USA', 'CHN', 'IND', 'DEU', 'JPN', 'GBR', 'FRA', 'ITA', 'KOR', 'ARE', 'SAU', 'IRN'],
 #     'continent': ['North America', 'Asia', 'Asia', 'Europe', 'Asia', 'Europe', 'Europe', 'Europe', 'Asia', 'Asia', 'Asia', 'Asia'],
-#     'value': np.random.uniform(50, 500, 12),  # $M trade volume
+#     'value': np.random.uniform(50, 600, 12),  # $M trade volume
 #     'weight': np.random.uniform(0.02, 0.15, 12),
 #     'period': 2024
 # }
@@ -410,6 +457,6 @@ with tabx:
 # )
 
 # fig.update_traces(root_color="#4682B4")  # SteelBlue
-# fig.update_layout(height=500)
+# fig.update_layout(height=600)
 # st.plotly_chart(fig, width='stretch')
 

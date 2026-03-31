@@ -20,8 +20,8 @@ cytoscape_stylesheet = [
         "style": {
             "curve-style": "bezier",
             "target-arrow-shape": "triangle",
-            "line-color": "#aaa",
-            "target-arrow-color": "#aaa",
+            "line-color": "#555",
+            "target-arrow-color": "#555",
             "width": "data(width)",
             "label": "data(value)",
             "font-size": "12px",
