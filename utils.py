@@ -1,4 +1,26 @@
 import pandas as pd 
+import plotly.express as px
+import streamlit as st
+
+def make_globe(trades, export_type='partner'):
+    graph_data = trades
+    graph_data = graph_data.groupby([f'{export_type}', f'{export_type}_name'])['value'].sum().reset_index()
+
+    options = ['orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
+    layout = st.selectbox("Projection", options, key=f'layout_{export_type}')
+
+    fig = px.choropleth(
+        graph_data,
+        locations=f'{export_type}',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
+        color='value',       # Color intensity by trade volume
+        hover_name=f'{export_type}_name',
+        color_continuous_scale='Blues',
+        projection=layout,  # World map projection
+        labels={'value': 'Trade Volume'}
+    )
+    
+    fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
+    st.plotly_chart(fig, width='stretch')
 
 
 cytoscape_stylesheet = [

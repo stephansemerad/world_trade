@@ -61,12 +61,13 @@ class Trade(Base):
     product = relationship("Product")
 
 
-class API_status(Base):
-    __tablename__ = "api_status"
+class Population(Base):
+    __tablename__ = "populations"
+
     id = Column(Integer, primary_key=True, autoincrement=True)
-    slug = Column(String, nullable=False)
-    status = Column(String, nullable=False)
-    retrieved_at = Column(DateTime, nullable=False)
+    country_code = Column(String, ForeignKey("countries.iso_3"), nullable=False)
+    year = Column(Integer, nullable=False)
+    value = Column(Float)
 
 
 # Base.metadata.drop_all(engine)

@@ -7,9 +7,7 @@ import pandas as pd
 from datetime import datetime
 import comtradeapicall
 
-
 session = SessionLocal()
-
 
 # Trade 
 # -------------------------------------------------------------------------
@@ -24,7 +22,6 @@ countries_reporter = (
     session.query(Country)
     .filter(Country.affiliation_iso_2 == Country.iso_2)
     .filter(Country.un_code != None)
-    .filter(Country.population > 100_000_000)
     .filter(Country.continent_name == 'Middle-East')
     .order_by(Country.population.desc())
     .all()
@@ -49,12 +46,12 @@ for reporter in countries_reporter:
 
 products = session.query(Product).filter(Product.id == '2709').all()
 
-trades = [f'{x.product_id}-{x.reporter}-{x.partner}'.lower() for x in 
-          session.query(Trade.product_id, Trade.reporter, Trade.partner).distinct().all()]
+trades = [f'{x.year}-{x.product_id}-{x.reporter}-{x.partner}'.lower() for x in 
+          session.query(Trade.year, Trade.product_id, Trade.reporter, Trade.partner).distinct().all()]
 
 print(f'{len(trades)} trades in database')
 
-periods = [2024]
+periods = [2024, 2023, 2022, 2021, 2020, 2019]
 for period in periods:
     for product in products:
         counter = 0
@@ -66,7 +63,7 @@ for period in periods:
                     print(f'ignoring > {reporter.iso_3} - {partner.iso_3}')
                     continue
                 else:
-                    slug = f'{product.id}-{reporter.iso_3}-{partner.iso_3}'.lower()
+                    slug = f'{period}-{product.id}-{reporter.iso_3}-{partner.iso_3}'.lower()
                     print(slug, countries_name[reporter.iso_3], '->', countries_name[partner.iso_3])
 
                     if slug in trades:

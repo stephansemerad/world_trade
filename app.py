@@ -5,9 +5,11 @@ import altair as alt
 import numpy as np
 import plotly.express as px
 import pydeck as pdk
-from model import SessionLocal, Country, Product, Trade, API_status
+from model import SessionLocal, Country, Product, Trade, Population
 from sqlalchemy.orm import aliased
 from utils import cytoscape_stylesheet, cytoscape_convert_to_nodes_and_edges
+from utils import make_globe
+
 
 session = SessionLocal()
 
@@ -31,6 +33,17 @@ def load_products():
         session.query(Product)
         .filter(Product.id.in_(session.query(Trade.product_id.distinct())))
         .order_by(Product.id.desc())
+    )
+    df = pd.read_sql_query(query.statement, session.bind)
+    return df
+
+def load_population():
+    query = (
+        session.query(Population, Country.name, Country.continent_name)
+        .join(Country, Country.iso_3 == Population.country_code)
+        .filter(Population.value != None)
+        .filter(Population.value > 0)
+        .order_by(Population.id.desc())
     )
     df = pd.read_sql_query(query.statement, session.bind)
     return df
@@ -82,6 +95,7 @@ def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',
 # ---------------------------------------------------------------------------
 products = load_products()
 countries = load_countries()
+population = load_population()
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
@@ -90,7 +104,6 @@ with col1:
         "Product:", 
         products["id"].unique().tolist(),
     )
-
 
 with col2:
     country_options = [(name, iso3) for name, iso3 in zip(countries['name'], countries['iso_3'])]
@@ -105,9 +118,7 @@ with col2:
     country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
 
 mode_of_transport_selection = 'TOTAL MOT'
-
 trades = load_trades(product_selection, mode_of_transport_selection, country_selection)
-
 trades_timeseries = trades
 
 with col3:
@@ -115,8 +126,6 @@ with col3:
     year_options = sorted(year_options, reverse=True)
     year_selection = st.selectbox("Year:", year_options)
     trades = trades[trades["year"] == year_selection ]
-
-
 
 with col4:
     weight_selection = st.selectbox("Weight", ['Global', 'Country'])
@@ -135,25 +144,24 @@ with col4:
             .round(2)
         )
 
-
-min_val = float(0)
-max_val = float(100)
-
-slider_range = st.slider(
-    "Weight Range", min_value=min_val, max_value=max_val, value=(min_val, max_val)
-)
+slider_range = st.slider("Weight Range", min_value=float(0), max_value=float(100), value=(float(0), float(100)))
 min_slider, max_slider = slider_range
-trades = trades[
-    (trades["weight"] >= min_slider) & (trades["weight"] <= max_slider)
-]
+trades = trades[(trades["weight"] >= min_slider) & (trades["weight"] <= max_slider)]
 
 st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_selection}')
 
 # Layout
 # ---------------------------------------------------------------------------
 
-tab1, tab2, tab3, tabx = st.tabs(
-    ["🌐 World Trade Map", "Graph", "Exporters / Importers", "🔢 Raw Data"],  on_change="rerun"
+tab1, tab2, tab3, tab4, tabx = st.tabs(
+    [
+        "🌐 World Trade Map", # 1
+        "Graph", # 2
+        "Exporters / Importers", # 3
+        "Population", # 4
+        "🔢 Raw Data" # 5
+    ],
+     on_change="rerun"
 )
 
 if trades.empty:
@@ -161,86 +169,52 @@ if trades.empty:
     st.stop()
 
 with tab1:
+    trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
+    trade_data['width'] = trade_data['weight'] / 8
 
-    col1, col2 = st.columns([2, 1])
+    arc_layer = pdk.Layer(
+        'ArcLayer',
+        trade_data,
+        get_source_position=['reporter_lng', 'reporter_lat'],
+        get_target_position=['partner_lng', 'partner_lat'],
+        get_width="width",
+        get_height=0.2,
+        get_tilt_slant=1,
+        get_source_color=[100, 150, 255, 160],  # Blue start
+        get_target_color=[50, 100, 255, 180],   # Blue end
+        pickable=True
+    )
 
-    with col1:
-        trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
-        trade_data['width'] = trade_data['weight'] / 8
+    unique_coords = trades[['reporter_lat', 'reporter_lng']].drop_duplicates()
 
-        arc_layer = pdk.Layer(
-            'ArcLayer',
-            trade_data,
-            get_source_position=['reporter_lng', 'reporter_lat'],
-            get_target_position=['partner_lng', 'partner_lat'],
-            get_width="width",
-            get_height=0.2,
-            get_tilt_slant=1,
-            get_source_color=[100, 150, 255, 160],  # Blue start
-            get_target_color=[50, 100, 255, 180],   # Blue end
-            pickable=True
-        )
+    center_lat = unique_coords['reporter_lat'].mean()
+    center_lng = unique_coords['reporter_lng'].mean()
 
-        unique_coords = trades[['reporter_lat', 'reporter_lng']].drop_duplicates()
+    view = pdk.ViewState(
+        latitude=center_lat,
+        longitude=center_lng,
+        zoom=2.5,
+        pitch=25
+    )
 
-        center_lat = unique_coords['reporter_lat'].mean()
-        center_lng = unique_coords['reporter_lng'].mean()
+    # Tooltip with country names and value
+    deck = pdk.Deck(
+        layers=[arc_layer],
+        initial_view_state=view,
+        map_style=None,
+        tooltip={
+            "html": """
+            <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
+            Trade Value: ${value}B<br/>
+            Trade Weight: ${weight}%
+            """,
+            "style": {"backgroundColor": "steelblue", "color": "white"}
+        }
+    )
 
-        view = pdk.ViewState(
-            latitude=center_lat,
-            longitude=center_lng,
-            zoom=2.5,
-            pitch=25
-        )
-
-        # Tooltip with country names and value
-        deck = pdk.Deck(
-            layers=[arc_layer],
-            initial_view_state=view,
-            map_style=None,
-            tooltip={
-                "html": """
-                <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
-                Trade Value: ${value}B<br/>
-                Trade Weight: ${weight}%
-                """,
-                "style": {"backgroundColor": "steelblue", "color": "white"}
-            }
-        )
-
-        st.pydeck_chart(deck, width='stretch', height=600)
-
-    with col2:
-
-        def make_globe():
-            graph_data = trades
-            graph_data = graph_data.groupby(['partner', 'partner_name'])['value'].sum().reset_index()
-
-            options = ['orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
-            layout = st.selectbox("Projection", options)
-
-            fig = px.choropleth(
-                graph_data,
-                locations='partner',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
-                color='value',       # Color intensity by trade volume
-                hover_name='partner_name',
-                color_continuous_scale='Blues',
-                projection=layout,  # World map projection
-                labels={'value': 'Trade Volume'}
-            )
-            
-            fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
-            st.plotly_chart(fig, width='stretch')
-        
-        make_globe()
+    st.pydeck_chart(deck, width='stretch', height=600)
 
     st.dataframe(trades)
-
-
-
-
-
-
 
 with tab2:
 
@@ -296,8 +270,6 @@ with tab2:
 
     st.divider()
 
-
-
 with tab3:
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -333,6 +305,8 @@ with tab3:
         )
 
         st.altair_chart(chart, width='stretch')
+
+        make_globe(trades, export_type='reporter')
 
         # exports['value'] = exports['value'].map('${:,.2f}'.format)
         # exports['weight'] = exports['weight'].map('{:,.2f}'.format)
@@ -373,16 +347,50 @@ with tab3:
 
         st.altair_chart(chart, width='stretch')
 
+        make_globe(trades, export_type='partner')
+
         # imports['value'] = imports['value'].map('${:,.2f}'.format)
         # imports['weight'] = imports['weight'].map('{:,.2f}'.format)
         # imports["trade_type"] = "import"
         # st.dataframe(imports, width='stretch')
+
+with tab4:
+
+    timeseries  = population 
+    timeseries = timeseries[['country', 'value', 'year']]
+    timeseries = timeseries.dropna()
+
+    countries_to_filter = trades['partner'].to_list()
+    timeseries = timeseries[timeseries["partner"].isin(countries_to_filter)]
+
+    countries_to_filter = trades['reporter'].to_list()
+    timeseries = timeseries[timeseries["reporter"].isin(countries_to_filter)]
+
+
+    chart = (alt.Chart(timeseries)
+        .mark_line(strokeWidth=3)
+        .encode(
+            x=alt.X('period:Q', title='Period'),
+            y=alt.Y('value:Q', title='Trade Value'),
+            color=alt.Color('trade:N', title='Trade Flow'),
+            strokeDash=alt.StrokeDash('trade:N')
+        )
+        .properties(
+            title='Trade Flow over time',
+            height=600
+        )
+        .interactive()
+    )
+
+    chart
+
 
 with tabx:
     tables = {
         'Trades': trades,
         'Product': products,
         'Countries': countries,
+        'Population': population,
     }
     for table in tables:
         st.text(f'{table} | records ({len(tables[table])})')
@@ -404,36 +412,6 @@ with tabx:
 
 # with col1:
 
-#     timeseries_trades['trade'] = (
-#         timeseries_trades['reporter'] + ' > ' +  timeseries_trades['partner_name']
-#     )
-#     timeseries_trades = timeseries_trades[['trade', 'value', 'period', 'reporter', 'partner']]
-#     timeseries_trades = timeseries_trades.dropna()
-
-
-#     countries_to_filter = trades['partner'].to_list()
-#     timeseries_trades = timeseries_trades[timeseries_trades["partner"].isin(countries_to_filter)]
-
-#     countries_to_filter = trades['reporter'].to_list()
-#     timeseries_trades = timeseries_trades[timeseries_trades["reporter"].isin(countries_to_filter)]
-
-
-#     chart = (alt.Chart(timeseries_trades)
-#         .mark_line(strokeWidth=3)
-#         .encode(
-#             x=alt.X('period:Q', title='Period'),
-#             y=alt.Y('value:Q', title='Trade Value'),
-#             color=alt.Color('trade:N', title='Trade Flow'),
-#             strokeDash=alt.StrokeDash('trade:N')
-#         )
-#         .properties(
-#             title='Trade Flow over time',
-#             height=600
-#         )
-#         .interactive()
-#     )
-
-#     chart
 
 
 
