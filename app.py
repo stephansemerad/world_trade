@@ -37,14 +37,22 @@ def load_products():
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
-def load_population():
+def load_population(country_selection=[]):
+    trade_reported_subquery = session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
+
     query = (
         session.query(Population, Country.name, Country.continent_name)
         .join(Country, Country.iso_3 == Population.country_code)
+        .filter(Population.country_code.in_(trade_reported_subquery))
         .filter(Population.value != None)
         .filter(Population.value > 0)
-        .order_by(Population.id.desc())
+        
     )
+
+    if country_selection: 
+        query = query.filter(Population.country_code.in_(country_selection))
+
+    query = query.order_by(Population.value.desc())
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
@@ -95,7 +103,6 @@ def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',
 # ---------------------------------------------------------------------------
 products = load_products()
 countries = load_countries()
-population = load_population()
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
@@ -118,8 +125,12 @@ with col2:
     country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
 
 mode_of_transport_selection = 'TOTAL MOT'
+
+
 trades = load_trades(product_selection, mode_of_transport_selection, country_selection)
 trades_timeseries = trades
+population = load_population(country_selection)
+
 
 with col3:
     year_options = trades["year"].unique()
@@ -259,7 +270,9 @@ with tab2:
             .encode(
                 x=alt.X('value_mil:Q', 
                         title='Trade Value (Mil USD)',
-                        axis=alt.Axis(format='.1f')),  # 1 decimal, e.g., 1.2M
+                        axis=alt.Axis(format='.1f'),
+                        scale=alt.Scale(padding=0.4)  # CORRECT: scale padding (0-1), not axis
+                        ),  # 1 decimal, e.g., 1.2M
                 y=alt.Y('trade:N', sort=None, title='Trade Flow'),
                 tooltip=[alt.Tooltip('trade:N'), alt.Tooltip('value:Q', format='.3s')]  # Full value on hover
             )
@@ -357,33 +370,89 @@ with tab3:
 with tab4:
 
     timeseries  = population 
-    timeseries = timeseries[['country', 'value', 'year']]
-    timeseries = timeseries.dropna()
+    timeseries = timeseries[['name', 'value', 'year']].dropna()
 
-    countries_to_filter = trades['partner'].to_list()
-    timeseries = timeseries[timeseries["partner"].isin(countries_to_filter)]
+    timeseries = timeseries.sort_values(['name', 'year'])  # This ensures proper order
 
-    countries_to_filter = trades['reporter'].to_list()
-    timeseries = timeseries[timeseries["reporter"].isin(countries_to_filter)]
+    timeseries['pct_growth'] = timeseries.groupby('name')['value'].pct_change() * 100
+    timeseries['pct_growth'] = timeseries['pct_growth'].round(2)
+
+    timeseries['cum_growth'] = (
+        timeseries.groupby('name')['value']
+        .apply(lambda x: (x / x.iloc[0] - 1) * 100)
+        .round(2)
+    )
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        chart = (alt.Chart(timeseries)
+            .mark_line(strokeWidth=3)
+            .encode(
+                x=alt.X('year:Q', title='Year'),
+                y=alt.Y('value:Q', title='Population'),
+                color=alt.Color('name:N', title='Country')  # Color by country
+            )
+            .properties(
+                title='Population over time per country',
+                height=600,
+            )
+            .interactive()
+        )
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        chart = (alt.Chart(timeseries)
+            .mark_bar(size=25)
+            .encode(
+                x=alt.X('year:O', title='Year', axis=alt.Axis(labelAngle=0)),
+                y=alt.Y('pct_growth:Q', title='Population Growth %'),
+                color=alt.Color('name:N', title='Country'),
+                tooltip=['name', 'year', 'pct_growth']
+            )
+            .properties(
+                title='Population Growth % over Time per Country',
+                height=600,
+                width=800
+            )
+            .interactive()
+        )
+        st.altair_chart(chart, use_container_width=True)
 
 
-    chart = (alt.Chart(timeseries)
-        .mark_line(strokeWidth=3)
+    cum_chart = (alt.Chart(timeseries)
+        .mark_bar(size=12)
         .encode(
-            x=alt.X('period:Q', title='Period'),
-            y=alt.Y('value:Q', title='Trade Value'),
-            color=alt.Color('trade:N', title='Trade Flow'),
-            strokeDash=alt.StrokeDash('trade:N')
+            x=alt.X('year:O', title='Year', scale=alt.Scale(padding=0.4)),
+            y=alt.Y('cum_growth:Q', title='Cumulative Growth %'),
+            color=alt.Color('name:N', title='Country'),
+            tooltip=['name', 'year', 'cum_growth']
         )
         .properties(
-            title='Trade Flow over time',
-            height=600
+            title='Cumulative Population Growth % over Time per Country',
+            height=400,
+            width=800
         )
         .interactive()
     )
+    st.altair_chart(cum_chart, use_container_width=True)
 
-    chart
 
+    max_year_data = timeseries.loc[timeseries.groupby('name')['year'].idxmax()]
+    pie_chart = (alt.Chart(max_year_data)
+        .mark_arc(outerRadius=100)
+        .encode(
+            theta=alt.Theta('value:Q', title='Population'),
+            color=alt.Color('name:N', title='Country'),
+            tooltip=['name', 'value']
+        )
+        .properties(
+            title=f'Population Share by Country ({max_year_data["year"].max()} - Latest Year)'
+        )
+    )
+    st.altair_chart(pie_chart, use_container_width=True)
+
+
+    st.dataframe(timeseries)
 
 with tabx:
     tables = {
