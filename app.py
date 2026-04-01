@@ -175,7 +175,7 @@ if trades.empty:
 
 with trade_data:
     trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
-    trade_data['width'] = trade_data['weight'] / 8
+    trade_data['width'] = trade_data['weight']
 
     arc_layer = pdk.Layer(
         'ArcLayer',
@@ -546,6 +546,7 @@ with population_data:
             )
         )
         st.altair_chart(pie_chart, use_container_width=True)
+
 
 
 with raw_data:
