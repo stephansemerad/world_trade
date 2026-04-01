@@ -1,7 +1,7 @@
 import time
 import polars as pl
 from world_trade import WorldTrade
-from model import SessionLocal, Country, Product, Trade, API_status
+from model import SessionLocal, Country, Product, Trade
 from rich import print  
 import pandas as pd
 from datetime import datetime
@@ -86,6 +86,7 @@ for period in periods:
                             customsCode=None,
                             motCode=None,
                         )
+                        
                         print(df)
                         if df.empty:
                             trade = (
