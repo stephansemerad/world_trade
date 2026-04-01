@@ -122,7 +122,7 @@ def cytoscape_convert_to_nodes_and_edges(trades):
                     "source": y["reporter"],
                     "target": y["partner"],
                     "value": f"{y['weight']/100:.2%}",
-                    "width": y["weight"] / 10,  # Add width to edge data
+                    "width": y["weight"],  # Add width to edge data
                 }
             }
 
