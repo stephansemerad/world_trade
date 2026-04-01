@@ -14,10 +14,8 @@ from utils import make_globe
 session = SessionLocal()
 
 st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide")
-st.title("🌐 World Trade Map")
-st.write("A simple interactive graph example.")
 
-# @st.cache_data
+@st.cache_data
 def load_countries():
     trade_reported_subquery = session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
     query = (
@@ -28,6 +26,7 @@ def load_countries():
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
+@st.cache_data
 def load_products():
     query = (
         session.query(Product)
@@ -37,7 +36,8 @@ def load_products():
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
-def load_population(country_selection=[]):
+@st.cache_data
+def load_population(country_selection=[], continent_selection=[]):
     trade_reported_subquery = session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
 
     query = (
@@ -52,19 +52,23 @@ def load_population(country_selection=[]):
     if country_selection: 
         query = query.filter(Population.country_code.in_(country_selection))
 
+    if continent_selection: 
+        query = query.filter(Country.continent_name.in_(continent_selection))
+
+
     query = query.order_by(Population.value.desc())
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
-
-
-def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',  country_selection=[], year=None):
+def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',  country_selection=[], continent_selection=[], year=None):
     reporter_country = aliased(Country)
     partner_country = aliased(Country)
     query = (
         session.query(
             Trade,
             reporter_country.name.label("reporter_name"),
+            reporter_country.continent_name.label("reporter_continent_name"),
+
             reporter_country.lat.label("reporter_lat"),
             reporter_country.lon.label("reporter_lng"),
 
@@ -89,6 +93,10 @@ def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',
     if country_selection: 
         query = query.filter(Trade.reporter.in_(country_selection))
 
+    if continent_selection: 
+        query = query.filter(Trade.reporter.in_(continent_selection))
+
+
     if year: 
         query = query.filter(Trade.year == year)
 
@@ -98,64 +106,53 @@ def load_trades(product_selection=None, mode_of_transport_selection='TOTAL MOT',
 
 
 
-
 # Filters
 # ---------------------------------------------------------------------------
 products = load_products()
 countries = load_countries()
 
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+product_selection = st.sidebar.selectbox(
+    "Product:", 
+    products["id"].unique().tolist(),
+)
 
-with col1:
-    product_selection = st.selectbox(
-        "Product:", 
-        products["id"].unique().tolist(),
-    )
+continent_options = [continent_name[0] for continent_name in zip(countries['continent_name'].unique())]
 
-with col2:
-    country_options = [(name, iso3) for name, iso3 in zip(countries['name'], countries['iso_3'])]
+# Multi-select on country names
+continent_selection = st.sidebar.multiselect(
+    "Continent:",
+    options=[name for name in continent_options]
+)
 
-    # Multi-select on country names
-    country_selected_names = st.multiselect(
-        "Country:",
-        options=[name for name, _ in country_options]
-    )
 
-    # Convert selected names to iso3 list
-    country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
+country_options = [(name, iso3) for name, iso3 in zip(countries['name'], countries['iso_3'])]
+
+country_selected_names = st.sidebar.multiselect(
+    "Country:", options=[name for name, _ in country_options]
+)
+
+country_selection = [iso3 for name, iso3 in country_options if name in country_selected_names]
 
 mode_of_transport_selection = 'TOTAL MOT'
-
-
 trades = load_trades(product_selection, mode_of_transport_selection, country_selection)
 trades_timeseries = trades
-population = load_population(country_selection)
+population = load_population(country_selection, continent_selection)
 
 
-with col3:
-    year_options = trades["year"].unique()
-    year_options = sorted(year_options, reverse=True)
-    year_selection = st.selectbox("Year:", year_options)
-    trades = trades[trades["year"] == year_selection ]
 
-with col4:
-    weight_selection = st.selectbox("Weight", ['Global', 'Country'])
-    if weight_selection == 'Global':
-        try:
-            trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
-        except Exception as e:
-            print(e)
-            trades['weight'] = 0
+year_options = trades["year"].unique()
+year_options = sorted(year_options, reverse=True)
+year_selection = st.sidebar.selectbox("Year:", year_options)
+trades = trades[trades["year"] == year_selection ]
 
-    if weight_selection == 'Country':
-        trades['weight'] = (
-            trades['value']
-            .div(trades.groupby('reporter')['value'].transform('sum'))
-            .mul(100)
-            .round(2)
-        )
 
-slider_range = st.slider("Weight Range", min_value=float(0), max_value=float(100), value=(float(0), float(100)))
+try:
+    trades['weight'] = round((trades['value'] / trades['value'].sum())* 100, 2) 
+except Exception as e:
+    print(e)
+    trades['weight'] = 0
+
+slider_range = st.sidebar.slider("Weight Range", min_value=float(0), max_value=float(100), value=(float(0), float(100)))
 min_slider, max_slider = slider_range
 trades = trades[(trades["weight"] >= min_slider) & (trades["weight"] <= max_slider)]
 
@@ -163,13 +160,10 @@ st.caption(f'{product_selection} / {', '.join(country_selected_names)} / {year_s
 
 # Layout
 # ---------------------------------------------------------------------------
-
-tab1, tab2, tab3, tab4, tabx = st.tabs(
+trade_data, population_data, raw_data = st.tabs(
     [
-        "🌐 World Trade Map", # 1
-        "Graph", # 2
-        "Exporters / Importers", # 3
-        "Population", # 4
+        "🌐 Trade", # 1
+        "📊 Population", # 4
         "🔢 Raw Data" # 5
     ],
      on_change="rerun"
@@ -179,7 +173,7 @@ if trades.empty:
     st.warning(f"No trade data.")
     st.stop()
 
-with tab1:
+with trade_data:
     trade_data = trades[['reporter_name', 'reporter_lng', 'reporter_lat', 'partner_name', 'partner_lng', 'value', 'weight', 'partner_lat', 'value' ]]
     trade_data['width'] = trade_data['weight'] / 8
 
@@ -225,13 +219,9 @@ with tab1:
 
     st.pydeck_chart(deck, width='stretch', height=600)
 
-    st.dataframe(trades)
-
-with tab2:
-
     col1, col2 = st.columns([1, 1])
 
-    options = ["cose", "breadthfirst", "circle", "grid", "random"]
+    options = [ "circle", "cose", "breadthfirst","grid", "random"]
     layout = st.selectbox("Layout:", options)
 
 
@@ -283,7 +273,6 @@ with tab2:
 
     st.divider()
 
-with tab3:
     col1, col2 = st.columns([1, 1])
     with col1:
         st.write("**Top Exporters**")
@@ -319,7 +308,7 @@ with tab3:
 
         st.altair_chart(chart, width='stretch')
 
-        make_globe(trades, export_type='reporter')
+        # make_globe(trades, export_type='reporter')
 
         # exports['value'] = exports['value'].map('${:,.2f}'.format)
         # exports['weight'] = exports['weight'].map('{:,.2f}'.format)
@@ -360,14 +349,14 @@ with tab3:
 
         st.altair_chart(chart, width='stretch')
 
-        make_globe(trades, export_type='partner')
+        # make_globe(trades, export_type='partner')
 
         # imports['value'] = imports['value'].map('${:,.2f}'.format)
         # imports['weight'] = imports['weight'].map('{:,.2f}'.format)
         # imports["trade_type"] = "import"
         # st.dataframe(imports, width='stretch')
 
-with tab4:
+with population_data:
 
     timeseries  = population 
     timeseries = timeseries[['name', 'value', 'year']].dropna()
@@ -379,9 +368,115 @@ with tab4:
 
     timeseries['cum_growth'] = (
         timeseries.groupby('name')['value']
-        .apply(lambda x: (x / x.iloc[0] - 1) * 100)
+        .transform(lambda x: (x / x.iloc[0] - 1) * 100)
         .round(2)
     )
+
+    col1, col2 = st.columns([1, 1])
+    max_year_data = timeseries.loc[timeseries.groupby('name')['year'].idxmax()]
+    with col1:
+        graph_data = max_year_data
+        graph_data = graph_data.sort_values('value', ascending=False).head(5)
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X(
+                    'value:Q', 
+                    title='Population',
+                    axis=alt.Axis(format='.3s'),  # e.g., 1.41B
+                    scale=alt.Scale(padding=0.4)
+                ),
+                y=alt.Y(
+                    'name:N', 
+                    sort=alt.EncodingSortField(field='value', op='max', order='descending'),
+                    title='Country'
+                ),
+                tooltip=[alt.Tooltip('name:N'), alt.Tooltip('value:Q', format='.3s')]
+            )
+            .properties(height=200, title='Largest Populations (2024)')
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        graph_data = max_year_data
+        graph_data = graph_data.sort_values('pct_growth', ascending=False).head(5)
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X(
+                    'pct_growth:Q', 
+                    title='Growth %',
+                    axis=alt.Axis(format='.1f'),  # e.g., 1.2%
+                    scale=alt.Scale(padding=0.4)
+                ),
+                y=alt.Y(
+                    'name:N', 
+                    sort=alt.EncodingSortField(field='pct_growth', op='max', order='descending'),
+                    title='Country'
+                ),
+                tooltip=[alt.Tooltip('name:N'), alt.Tooltip('pct_growth:Q', format='.1f')]
+            )
+            .properties(height=200, title='Population Growth % (2024)')
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        graph_data = max_year_data
+        graph_data = graph_data.sort_values('value', ascending=False).tail(5)
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X(
+                    'value:Q', 
+                    title='Population',
+                    axis=alt.Axis(format='.3s'),  # e.g., 1.41B
+                    scale=alt.Scale(padding=0.4)
+                ),
+                y=alt.Y(
+                    'name:N', 
+                    sort=alt.EncodingSortField(field='value', op='max', order='ascending'),
+                    title='Country'
+                ),
+                tooltip=[alt.Tooltip('name:N'), alt.Tooltip('value:Q', format='.3s')]
+            )
+            .properties(height=200, title='Smallest Populations (2024)')
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        graph_data = max_year_data
+        graph_data = graph_data.sort_values('pct_growth', ascending=False).tail(5)
+        chart = (
+            alt.Chart(graph_data)
+            .mark_bar(color='steelblue')
+            .encode(
+                x=alt.X(
+                    'pct_growth:Q', 
+                    title='Growth %',
+                    axis=alt.Axis(format='.1f'),  # e.g., 1.2%
+                    scale=alt.Scale(padding=0.4)
+                ),
+                y=alt.Y(
+                    'name:N', 
+                    sort=alt.EncodingSortField(field='pct_growth', op='max', order='ascending'),
+                    title='Country'
+                ),
+                tooltip=[alt.Tooltip('name:N'), alt.Tooltip('pct_growth:Q', format='.1f')]
+            )
+            .properties(height=200, title='Population Decline % (2024)')
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -418,43 +513,42 @@ with tab4:
         )
         st.altair_chart(chart, use_container_width=True)
 
-
-    cum_chart = (alt.Chart(timeseries)
-        .mark_bar(size=12)
-        .encode(
-            x=alt.X('year:O', title='Year', scale=alt.Scale(padding=0.4)),
-            y=alt.Y('cum_growth:Q', title='Cumulative Growth %'),
-            color=alt.Color('name:N', title='Country'),
-            tooltip=['name', 'year', 'cum_growth']
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        cum_chart = (alt.Chart(timeseries)
+            .mark_line()
+            .encode(
+                x=alt.X('year:O', title='Year', scale=alt.Scale(padding=0.4)),
+                y=alt.Y('cum_growth:Q', title='Cumulative Growth %'),
+                color=alt.Color('name:N', title='Country'),
+                tooltip=['name', 'year', 'cum_growth']
+            )
+            .properties(
+                title='Cumulative Population Growth % over Time per Country',
+                height=400,
+                width=800
+            )
+            .interactive()
         )
-        .properties(
-            title='Cumulative Population Growth % over Time per Country',
-            height=400,
-            width=800
+        st.altair_chart(cum_chart, use_container_width=True)
+
+    with col2:
+        max_year_data = timeseries.loc[timeseries.groupby('name')['year'].idxmax()]
+        pie_chart = (alt.Chart(max_year_data)
+            .mark_arc(outerRadius=100)
+            .encode(
+                theta=alt.Theta('value:Q', title='Population'),
+                color=alt.Color('name:N', title='Country'),
+                tooltip=['name', 'value']
+            )
+            .properties(
+                title=f'Population Share by Country ({max_year_data["year"].max()} - Latest Year)'
+            )
         )
-        .interactive()
-    )
-    st.altair_chart(cum_chart, use_container_width=True)
+        st.altair_chart(pie_chart, use_container_width=True)
 
 
-    max_year_data = timeseries.loc[timeseries.groupby('name')['year'].idxmax()]
-    pie_chart = (alt.Chart(max_year_data)
-        .mark_arc(outerRadius=100)
-        .encode(
-            theta=alt.Theta('value:Q', title='Population'),
-            color=alt.Color('name:N', title='Country'),
-            tooltip=['name', 'value']
-        )
-        .properties(
-            title=f'Population Share by Country ({max_year_data["year"].max()} - Latest Year)'
-        )
-    )
-    st.altair_chart(pie_chart, use_container_width=True)
-
-
-    st.dataframe(timeseries)
-
-with tabx:
+with raw_data:
     tables = {
         'Trades': trades,
         'Product': products,
