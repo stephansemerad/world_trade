@@ -16,21 +16,15 @@ session = SessionLocal()
 st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide")
 
 
-@st.cache_data
 def load_countries():
-    trade_reported_subquery = (
-        session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
-    )
     query = (
         session.query(Country)
-        .filter(Country.iso_3.in_(trade_reported_subquery))
-        .order_by(Country.name.desc())
+        .order_by(Country.name.asc())
     )
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
 
-@st.cache_data
 def load_products():
     query = (
         session.query(Product)
@@ -41,16 +35,12 @@ def load_products():
     return df
 
 
-@st.cache_data
 def load_population(country_selection=[], continent_selection=[]):
-    trade_reported_subquery = (
-        session.query(Trade.reporter.distinct()).filter(Trade.value > 0).subquery()
-    )
+
 
     query = (
         session.query(Population, Country.name, Country.continent_name)
         .join(Country, Country.iso_3 == Population.country_code)
-        .filter(Population.country_code.in_(trade_reported_subquery))
         .filter(Population.value != None)
         .filter(Population.value > 0)
     )

@@ -29,6 +29,10 @@ class Country(Base):
     un_code = Column(String, nullable=True)
     population = Column(Integer)
 
+    capital = Column(String)
+    capital_lat = Column(String)
+    capital_lng = Column(String)
+
     affiliation = Column(String)
     affiliation_iso_2 = Column(String)
 
