@@ -42,11 +42,11 @@ class Country(Base):
     continent_code = Column(String)
     continent_name = Column(String)
     # Now back_populates refers to relationships (not columns)
-    trades_as_reporter = relationship(
-        "Trade", foreign_keys="Trade.reporter", back_populates="reporter_country"
+    trades_as_exporter = relationship(
+        "Trade", foreign_keys="Trade.exporter", back_populates="exporter_country"
     )
-    trades_as_partner = relationship(
-        "Trade", foreign_keys="Trade.partner", back_populates="partner_country"
+    trades_as_importer = relationship(
+        "Trade", foreign_keys="Trade.importer", back_populates="importer_country"
     )
 
     def as_dict(self) -> dict:
@@ -71,19 +71,17 @@ class Trade(Base):
     __tablename__ = "trades"
     id = Column(Integer, primary_key=True, autoincrement=True)
     product_id = Column(String, ForeignKey("products.id"), nullable=False)
-    reporter = Column(String, ForeignKey("countries.iso_3"), nullable=False)
-    partner = Column(String, ForeignKey("countries.iso_3"), nullable=False)
+    exporter = Column(String, ForeignKey("countries.iso_3"), nullable=False)
+    importer = Column(String, ForeignKey("countries.iso_3"), nullable=False)
     year = Column(Integer, nullable=False)
     value = Column(Float)
-    mode_of_transport = Column(String)
-    weight = Column(Float)
 
     # Named relationships for back_populates
-    reporter_country = relationship(
-        "Country", foreign_keys=[reporter], back_populates="trades_as_reporter"
+    exporter_country = relationship(
+        "Country", foreign_keys=[exporter], back_populates="trades_as_exporter"
     )
-    partner_country = relationship(
-        "Country", foreign_keys=[partner], back_populates="trades_as_partner"
+    importer_country = relationship(
+        "Country", foreign_keys=[importer], back_populates="trades_as_importer"
     )
 
     product = relationship("Product")
