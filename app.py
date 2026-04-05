@@ -17,26 +17,18 @@ st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide"
 
 
 def load_countries():
-    query = (
-        session.query(Country)
-        .order_by(Country.name.asc())
-    )
+    query = session.query(Country).order_by(Country.name.asc())
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
 
 def load_products():
-    query = (
-        session.query(Product)
-        .filter(Product.id.in_(session.query(Trade.product_id.distinct())))
-        .order_by(Product.id.desc())
-    )
+    query = session.query(Product).order_by(Product.id.desc())
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
 
 def load_population(country_selection=[], continent_selection=[]):
-
 
     query = (
         session.query(Population, Country.name, Country.continent_name)
@@ -63,38 +55,35 @@ def load_trades(
     continent_selection=[],
     year=None,
 ):
-    reporter_country = aliased(Country)
-    partner_country = aliased(Country)
+    exporter_country = aliased(Country)
+    importer_country = aliased(Country)
     query = (
         session.query(
             Trade,
-            reporter_country.name.label("reporter_name"),
-            reporter_country.continent_name.label("reporter_continent_name"),
-            reporter_country.lat.label("reporter_lat"),
-            reporter_country.lon.label("reporter_lng"),
-            partner_country.name.label("partner_name"),
-            partner_country.lat.label("partner_lat"),
-            partner_country.lon.label("partner_lng"),
+            exporter_country.name.label("exporter_name"),
+            exporter_country.continent_name.label("exporter_continent_name"),
+            exporter_country.lat.label("exporter_lat"),
+            exporter_country.lon.label("exporter_lng"),
+            importer_country.name.label("importer_name"),
+            importer_country.lat.label("importer_lat"),
+            importer_country.lon.label("importer_lng"),
         )
-        .join(reporter_country, reporter_country.iso_3 == Trade.reporter)
-        .join(partner_country, partner_country.iso_3 == Trade.partner)
+        .join(exporter_country, exporter_country.iso_3 == Trade.exporter)
+        .join(importer_country, importer_country.iso_3 == Trade.importer)
         .filter(Trade.value != None)  # Exclude records with null value
         .filter(Trade.value > 0)  # Exclude records with zero or negative value
-        .filter(Trade.reporter != "")  # Exclude records with empty reporter
-        .filter(Trade.partner != "")  # Exclude records with empty partner
+        .filter(Trade.exporter != "")  # Exclude records with empty exporter
+        .filter(Trade.importer != "")  # Exclude records with empty importer
     )
 
     if product_selection:
         query = query.filter(Trade.product_id == product_selection)
 
-    if mode_of_transport_selection:
-        query = query.filter(Trade.mode_of_transport == mode_of_transport_selection)
-
     if country_selection:
-        query = query.filter(Trade.reporter.in_(country_selection))
+        query = query.filter(Trade.exporter.in_(country_selection))
 
     if continent_selection:
-        query = query.filter(Trade.reporter.in_(continent_selection))
+        query = query.filter(Trade.exporter.in_(continent_selection))
 
     if year:
         query = query.filter(Trade.year == year)
@@ -109,10 +98,13 @@ def load_trades(
 products = load_products()
 countries = load_countries()
 
+st.dataframe(countries)
+
 product_display_options = [
     f"{row['id']} - {row['name']}"
     for _, row in products[["id", "name"]].drop_duplicates().iterrows()
 ]
+
 product_id_map = {
     f"{row['id']} - {row['name']}": row["id"]
     for _, row in products[["id", "name"]].drop_duplicates().iterrows()
@@ -192,21 +184,18 @@ trade_data, population_data, raw_data = st.tabs(
     ["🌐 Trade", "📊 Population", "🔢 Raw Data"], on_change="rerun"  # 1  # 4  # 5
 )
 
-if trades.empty:
-    st.warning(f"No trade data.")
-    st.stop()
 
 with trade_data:
     trade_data = trades[
         [
-            "reporter_name",
-            "reporter_lng",
-            "reporter_lat",
-            "partner_name",
-            "partner_lng",
+            "exporter_name",
+            "exporter_lng",
+            "exporter_lat",
+            "importer_name",
+            "importer_lng",
             "value",
             "weight",
-            "partner_lat",
+            "importer_lat",
             "value",
         ]
     ]
@@ -215,8 +204,8 @@ with trade_data:
     arc_layer = pdk.Layer(
         "ArcLayer",
         trade_data,
-        get_source_position=["reporter_lng", "reporter_lat"],
-        get_target_position=["partner_lng", "partner_lat"],
+        get_source_position=["exporter_lng", "exporter_lat"],
+        get_target_position=["importer_lng", "importer_lat"],
         get_width="width",
         get_height=0.2,
         get_tilt_slant=1,
@@ -225,10 +214,10 @@ with trade_data:
         pickable=True,
     )
 
-    unique_coords = trades[["reporter_lat", "reporter_lng"]].drop_duplicates()
+    unique_coords = trades[["exporter_lat", "exporter_lng"]].drop_duplicates()
 
-    center_lat = unique_coords["reporter_lat"].mean()
-    center_lng = unique_coords["reporter_lng"].mean()
+    center_lat = unique_coords["exporter_lat"].mean()
+    center_lng = unique_coords["exporter_lng"].mean()
 
     view = pdk.ViewState(latitude=center_lat, longitude=center_lng, zoom=2.5, pitch=25)
 
@@ -239,7 +228,7 @@ with trade_data:
         map_style=None,
         tooltip={
             "html": """
-            <b>{reporter_name}</b> → <b>{partner_name}</b><br/>
+            <b>{exporter_name}</b> → <b>{importer_name}</b><br/>
             Trade Value: ${value}B<br/>
             Trade Weight: ${weight}%
             """,
@@ -275,7 +264,7 @@ with trade_data:
     with col2:
         graph_data = trades
 
-        graph_data["trade"] = trades["reporter"] + " > " + trades["partner_name"]
+        graph_data["trade"] = trades["exporter"] + " > " + trades["importer_name"]
         graph_data = graph_data[["trade", "value"]]
         graph_data = graph_data.sort_values("value", ascending=False).head(
             20
@@ -310,9 +299,9 @@ with trade_data:
     col1, col2 = st.columns([1, 1])
     with col1:
         st.write("**Top Exporters**")
-        # Export flows: what reporter sends to which partners
+        # Export flows: what exporter sends to which importers
         exports = (
-            trades.groupby(["product_id", "year", "reporter", "reporter_name"])
+            trades.groupby(["product_id", "year", "exporter", "exporter_name"])
             .agg({"value": "sum", "weight": "sum"})
             .sort_values("value", ascending=False)
             .reset_index()
@@ -320,7 +309,7 @@ with trade_data:
 
         graph_data = exports
         graph_data = (
-            graph_data[["reporter_name", "value"]]
+            graph_data[["exporter_name", "value"]]
             .sort_values("value", ascending=False)
             .head(20)
         )
@@ -335,9 +324,9 @@ with trade_data:
                     title="Trade Value (Mil USD)",
                     axis=alt.Axis(format=".1f"),
                 ),  # 1 decimal, e.g., 1.2M
-                y=alt.Y("reporter_name:N", sort=None, title="Reporter"),
+                y=alt.Y("exporter_name:N", sort=None, title="exporter"),
                 tooltip=[
-                    alt.Tooltip("reporter_name:N"),
+                    alt.Tooltip("exporter_name:N"),
                     alt.Tooltip("value:Q", format=".3s"),
                 ],  # Full value on hover
             )
@@ -346,7 +335,7 @@ with trade_data:
 
         st.altair_chart(chart, width="stretch")
 
-        # make_globe(trades, export_type='reporter')
+        # make_globe(trades, export_type='exporter')
 
         # exports['value'] = exports['value'].map('${:,.2f}'.format)
         # exports['weight'] = exports['weight'].map('{:,.2f}'.format)
@@ -355,9 +344,9 @@ with trade_data:
 
     with col2:
         st.write("**Top Importers**")
-        # Import flows: what partner receives from which reporters
+        # Import flows: what importer receives from which exporters
         imports = (
-            trades.groupby(["product_id", "year", "partner", "partner_name"])
+            trades.groupby(["product_id", "year", "importer", "importer_name"])
             .agg({"value": "sum", "weight": "sum"})
             .sort_values("value", ascending=False)
             .reset_index()
@@ -365,7 +354,7 @@ with trade_data:
 
         graph_data = imports
         graph_data = (
-            graph_data[["partner_name", "value"]]
+            graph_data[["importer_name", "value"]]
             .sort_values("value", ascending=False)
             .head(20)
         )
@@ -380,9 +369,9 @@ with trade_data:
                     title="Trade Value (Mil USD)",
                     axis=alt.Axis(format=".1f"),
                 ),  # 1 decimal, e.g., 1.2M
-                y=alt.Y("partner_name:N", sort=None, title="Partner"),
+                y=alt.Y("importer_name:N", sort=None, title="importer"),
                 tooltip=[
-                    alt.Tooltip("partner_name:N"),
+                    alt.Tooltip("importer_name:N"),
                     alt.Tooltip("value:Q", format=".3s"),
                 ],  # Full value on hover
             )
@@ -391,7 +380,7 @@ with trade_data:
 
         st.altair_chart(chart, width="stretch")
 
-        # make_globe(trades, export_type='partner')
+        # make_globe(trades, export_type='importer')
 
         # imports['value'] = imports['value'].map('${:,.2f}'.format)
         # imports['weight'] = imports['weight'].map('{:,.2f}'.format)
@@ -626,9 +615,9 @@ with raw_data:
 
 
 # example_data = {
-#     'reporter_iso3': ['World'] * 12,
-#     'partner_name': ['USA', 'China', 'India', 'Germany', 'Japan', 'UK', 'France', 'Italy', 'South Korea', 'UAE', 'Saudi Arabia', 'Iran'],
-#     'partner_iso3': ['USA', 'CHN', 'IND', 'DEU', 'JPN', 'GBR', 'FRA', 'ITA', 'KOR', 'ARE', 'SAU', 'IRN'],
+#     'exporter_iso3': ['World'] * 12,
+#     'importer_name': ['USA', 'China', 'India', 'Germany', 'Japan', 'UK', 'France', 'Italy', 'South Korea', 'UAE', 'Saudi Arabia', 'Iran'],
+#     'importer_iso3': ['USA', 'CHN', 'IND', 'DEU', 'JPN', 'GBR', 'FRA', 'ITA', 'KOR', 'ARE', 'SAU', 'IRN'],
 #     'continent': ['North America', 'Asia', 'Asia', 'Europe', 'Asia', 'Europe', 'Europe', 'Europe', 'Asia', 'Asia', 'Asia', 'Asia'],
 #     'value': np.random.uniform(50, 600, 12),  # $M trade volume
 #     'weight': np.random.uniform(0.02, 0.15, 12),
@@ -640,10 +629,10 @@ with raw_data:
 # st.dataframe(df, width='stretch')
 # fig = px.treemap(
 #     df,
-#     path=[px.Constant('World'), 'continent', 'partner_name'],
+#     path=[px.Constant('World'), 'continent', 'importer_name'],
 #     values='weight',
 #     color='value',
-#     hover_data=['partner_iso3', 'value', 'weight'],
+#     hover_data=['importer_iso3', 'value', 'weight'],
 #     color_continuous_scale='Blues',
 #     color_continuous_midpoint=np.median(df['value'])
 # )

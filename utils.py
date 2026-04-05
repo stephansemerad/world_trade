@@ -1,26 +1,40 @@
-import pandas as pd 
+import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-def make_globe(trades, export_type='partner'):
-    graph_data = trades
-    graph_data = graph_data.groupby([f'{export_type}', f'{export_type}_name'])['value'].sum().reset_index()
 
-    options = ['orthographic', 'equirectangular', 'mercator', 'conic equal area', 'azimuthal equal area', 'robinson', 'mollweide', 'hammer']
-    layout = st.selectbox("Projection", options, key=f'layout_{export_type}')
+def make_globe(trades, export_type="partner"):
+    graph_data = trades
+    graph_data = (
+        graph_data.groupby([f"{export_type}", f"{export_type}_name"])["value"]
+        .sum()
+        .reset_index()
+    )
+
+    options = [
+        "orthographic",
+        "equirectangular",
+        "mercator",
+        "conic equal area",
+        "azimuthal equal area",
+        "robinson",
+        "mollweide",
+        "hammer",
+    ]
+    layout = st.selectbox("Projection", options, key=f"layout_{export_type}")
 
     fig = px.choropleth(
         graph_data,
-        locations=f'{export_type}',      # 👈 ISO3 column: 'ARE', 'BHR', etc.
-        color='value',       # Color intensity by trade volume
-        hover_name=f'{export_type}_name',
-        color_continuous_scale='Blues',
+        locations=f"{export_type}",  # 👈 ISO3 column: 'ARE', 'BHR', etc.
+        color="value",  # Color intensity by trade volume
+        hover_name=f"{export_type}_name",
+        color_continuous_scale="Blues",
         projection=layout,  # World map projection
-        labels={'value': 'Trade Volume'}
+        labels={"value": "Trade Volume"},
     )
-    
-    fig.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
-    st.plotly_chart(fig, width='stretch')
+
+    fig.update_layout(height=600, margin={"r": 0, "t": 40, "l": 0, "b": 0})
+    st.plotly_chart(fig, width="stretch")
 
 
 cytoscape_stylesheet = [
@@ -71,25 +85,26 @@ def cytoscape_convert_to_nodes_and_edges(trades):
     nodes = []
     edges = []
 
+    trades = trades.drop_duplicates()
+    trades = trades[trades["weight"] > 0]
 
-    trades =  trades.drop_duplicates()
-    trades = trades[trades['weight'] > 0]
+    exporters = trades[["exporter", "exporter_name"]].copy()
+    importer = trades[["partner", "partner_name"]].copy()
 
-    reporters = trades[["reporter", "reporter_name"]].copy()
-    partners = trades[["partner", "partner_name"]].copy()
+    exporters.columns = ["id", "name"]
+    importer.columns = ["id", "name"]
 
-    reporters.columns = ["id", "name"]
-    partners.columns = ["id", "name"]
-
-    country_df = pd.concat([partners, reporters], ignore_index=True).drop_duplicates().to_dict("records")
+    country_df = (
+        pd.concat([importer, exporters], ignore_index=True)
+        .drop_duplicates()
+        .to_dict("records")
+    )
 
     country_data = country_df
     country_list = [x["id"] for x in country_data]
 
-
-
     for x in country_data:
-        if x['id'] == None or x['id'] == '':
+        if x["id"] == None or x["id"] == "":
             continue
 
         row = {
@@ -103,10 +118,10 @@ def cytoscape_convert_to_nodes_and_edges(trades):
             nodes.append(row)
 
     for y in trades.drop_duplicates().to_dict("records"):
-        if y["reporter"] == y["partner"]:
+        if y["exporter"] == y["partner"]:
             continue
 
-        if y["reporter"] not in country_list:
+        if y["exporter"] not in country_list:
             continue
 
         if y["partner"] not in country_list:
@@ -116,19 +131,18 @@ def cytoscape_convert_to_nodes_and_edges(trades):
         if edge_width > 1000:
             edge_width = 10
 
-        row =         {
-                "data": {
-                    "id": f"{y['reporter']}-{y['partner']}",
-                    "source": y["reporter"],
-                    "target": y["partner"],
-                    "value": f"{y['weight']/100:.2%}",
-                    "width": y["weight"],  # Add width to edge data
-                }
+        row = {
+            "data": {
+                "id": f"{y['exporter']}-{y['partner']}",
+                "source": y["exporter"],
+                "target": y["partner"],
+                "value": f"{y['weight']/100:.2%}",
+                "width": y["weight"],  # Add width to edge data
             }
+        }
 
         if row not in edges:
             edges.append(row)
 
     elements = nodes + edges
     return elements
-
