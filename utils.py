@@ -3,7 +3,7 @@ import plotly.express as px
 import streamlit as st
 
 
-def make_globe(trades, export_type="partner"):
+def make_globe(trades, export_type="importer"):
     graph_data = trades
     graph_data = (
         graph_data.groupby([f"{export_type}", f"{export_type}_name"])["value"]
@@ -89,7 +89,7 @@ def cytoscape_convert_to_nodes_and_edges(trades):
     trades = trades[trades["weight"] > 0]
 
     exporters = trades[["exporter", "exporter_name"]].copy()
-    importer = trades[["partner", "partner_name"]].copy()
+    importer = trades[["importer", "importer_name"]].copy()
 
     exporters.columns = ["id", "name"]
     importer.columns = ["id", "name"]
@@ -118,13 +118,13 @@ def cytoscape_convert_to_nodes_and_edges(trades):
             nodes.append(row)
 
     for y in trades.drop_duplicates().to_dict("records"):
-        if y["exporter"] == y["partner"]:
+        if y["exporter"] == y["importer"]:
             continue
 
         if y["exporter"] not in country_list:
             continue
 
-        if y["partner"] not in country_list:
+        if y["importer"] not in country_list:
             continue
 
         edge_width = int(y["value"])
@@ -133,9 +133,9 @@ def cytoscape_convert_to_nodes_and_edges(trades):
 
         row = {
             "data": {
-                "id": f"{y['exporter']}-{y['partner']}",
+                "id": f"{y['exporter']}-{y['importer']}",
                 "source": y["exporter"],
-                "target": y["partner"],
+                "target": y["importer"],
                 "value": f"{y['weight']/100:.2%}",
                 "width": y["weight"],  # Add width to edge data
             }

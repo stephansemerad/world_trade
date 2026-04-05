@@ -17,13 +17,21 @@ st.set_page_config(page_title="World Trade Map", page_icon="🌐", layout="wide"
 
 
 def load_countries():
+
     query = session.query(Country).order_by(Country.name.asc())
+
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
 
 def load_products():
-    query = session.query(Product).order_by(Product.id.desc())
+
+    subquery = session.query(Trade.product_id).distinct().subquery()
+    query = (
+        session.query(Product)
+        .filter(Product.id.in_(subquery))
+        .order_by(Product.id.desc())
+    )
     df = pd.read_sql_query(query.statement, session.bind)
     return df
 
@@ -50,7 +58,6 @@ def load_population(country_selection=[], continent_selection=[]):
 
 def load_trades(
     product_selection=None,
-    mode_of_transport_selection="TOTAL MOT",
     country_selection=[],
     continent_selection=[],
     year=None,
@@ -67,6 +74,7 @@ def load_trades(
             importer_country.name.label("importer_name"),
             importer_country.lat.label("importer_lat"),
             importer_country.lon.label("importer_lng"),
+            Trade.value.label("value_trade"),
         )
         .join(exporter_country, exporter_country.iso_3 == Trade.exporter)
         .join(importer_country, importer_country.iso_3 == Trade.importer)
@@ -98,23 +106,21 @@ def load_trades(
 products = load_products()
 countries = load_countries()
 
-st.dataframe(countries)
 
 product_display_options = [
     f"{row['id']} - {row['name']}"
     for _, row in products[["id", "name"]].drop_duplicates().iterrows()
 ]
-
 product_id_map = {
     f"{row['id']} - {row['name']}": row["id"]
     for _, row in products[["id", "name"]].drop_duplicates().iterrows()
 }
-
 product_display_selection = st.sidebar.selectbox(
     "Product:",
     product_display_options,
 )
 product_selection = product_id_map[product_display_selection]
+
 
 continent_options = [
     continent_name[0] for continent_name in zip(countries["continent_name"].unique())
@@ -147,8 +153,7 @@ country_selection = [
     iso3 for name, iso3 in country_options if name in country_selected_names
 ]
 
-mode_of_transport_selection = "TOTAL MOT"
-trades = load_trades(product_selection, mode_of_transport_selection, country_selection)
+trades = load_trades(product_selection, country_selection)
 trades_timeseries = trades
 population = load_population(country_selection, continent_selection)
 
@@ -219,7 +224,7 @@ with trade_data:
     center_lat = unique_coords["exporter_lat"].mean()
     center_lng = unique_coords["exporter_lng"].mean()
 
-    view = pdk.ViewState(latitude=center_lat, longitude=center_lng, zoom=2.5, pitch=25)
+    view = pdk.ViewState(latitude=center_lat, longitude=center_lng, zoom=1.5, pitch=25)
 
     # Tooltip with country names and value
     deck = pdk.Deck(
