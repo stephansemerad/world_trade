@@ -1,5 +1,4 @@
 import time
-from world_trade import WorldTrade
 from sqlalchemy import (
     create_engine,
     Column,
